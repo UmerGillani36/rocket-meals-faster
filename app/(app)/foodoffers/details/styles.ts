@@ -1,0 +1,116 @@
+import { StyleSheet } from 'react-native';
+
+export default StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  featuredContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 10,
+    padding: 10,
+  },
+  imageContainer: {
+    width: '50%',
+    height: 350,
+    borderRadius: 25,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  featuredImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+    borderRadius: 25,
+  },
+  detailsContainer: {
+    width: '45%',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    justifyContent: 'space-between',
+  },
+  header: {
+    width: '100%',
+  },
+  row: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  medium: {
+    fontSize: 30,
+    fontFamily: 'Poppins_400Regular',
+  },
+  ratingView: {
+    width: 130,
+    height: 50,
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: '#ffffff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+  },
+  totalRating: {
+    fontSize: 16,
+    fontFamily: 'Poppins_400Regular',
+  },
+  foodHeading: {
+    width: '50%',
+    textAlign: 'left',
+    fontSize: 50,
+    fontFamily: 'Poppins_700Bold',
+    marginTop: 10,
+  },
+  ratingContainer: {
+    width: '100%',
+    backgroundColor: '#2E2E2E',
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  rateUs: {
+    fontSize: 18,
+    fontFamily: 'Poppins_400Regular',
+  },
+  stars: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  notificationContainer: {
+    width: '100%',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderRadius: 25,
+    marginTop: 10,
+  },
+  notificationBody: {
+    fontSize: 18,
+    fontFamily: 'Poppins_400Regular',
+  },
+  bellIconContainer: {
+    padding: 15,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bellIconAtiveContainer: {
+    padding: 15,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#FCDE31',
+  },
+  dumy: {},
+});

@@ -1,0 +1,30 @@
+// Auth
+export const LOGIN_USER = 'LOGIN_USER';
+export const SIGNUP_USER = 'SIGNUP_USER';
+export const CLEAR_USER = 'CLEAR_USER';
+export const UPDATE_USER = 'UPDATE_USER';
+export const ADD_TOKEN = 'ADD_TOKEN';
+export const CLEAR_TOKEN = 'CLEAR_TOKEN';
+export const UPDATE_LOGIN = 'UPDATE_LOGIN';
+export const ON_LOGOUT = 'ON_LOGOUT';
+export const UPDATE_MANAGEMENT = 'UPDATE_MANAGEMENT';
+
+
+export const ON_LOGIN = 'ON_LOGIN';
+export const GET_CHECKLISTS = 'GET_CHECKLISTS';
+export const SAVE_CHECKLIST_CATEGORY = 'SAVE_CHECKLIST_CATEGORY';
+export const SAVE_PENDING = 'SAVE_PENDING';
+export const REMOVE_PENDING = 'REMOVE_PENDING';
+export const SAVE_DRAFT = 'SAVE_DRAFT';
+export const REMOVE_DRAFT = 'REMOVE_DRAFT';
+export const SET_NETWORK_STATE = 'SET_NETWORK_STATE';
+export const GET_INCIDENCES = 'GET_INCIDENCES';
+
+
+// Canteens
+export const GET_CANTEENS = 'GET_CANTEENS';
+export const SET_CANTEENS = 'SET_CANTEENS';
+export const SET_BUILDINGS = 'SET_BUILDINGS';
+export const SET_SELECTED_CANTEEN = 'SET_SELECTED_CANTEEN';
+export const SET_FOOD_OFFERS = 'SET_FOOD_OFFERS';
+export const SET_SELECTED_CANTEEN_FOOD_OFFERS = 'SET_SELECTED_CANTEEN_FOOD_OFFERS';

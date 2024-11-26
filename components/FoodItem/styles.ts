@@ -1,0 +1,86 @@
+import { StyleSheet } from 'react-native';
+
+export default StyleSheet.create({
+  card: {
+    borderRadius: 18,
+    justifyContent: 'space-between',
+    paddingBottom: 10,
+  },
+  cardContent: {
+    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  imageContainer: {
+    width: '100%',
+    borderRadius: 18,
+    position: 'relative',
+  },
+  overlay: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    borderRadius: 18,
+  },
+  favContainer: {
+    width: 35,
+    height: 35,
+    borderRadius: 50,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    position: 'absolute',
+    top: 5,
+    right: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  categoriesContainer: {
+    width: '100%',
+    position: 'absolute',
+    bottom: 5,
+    left: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    gap: 5,
+  },
+  categoryLogo: {
+    width: 30,
+    height: 30,
+    resizeMode: 'cover',
+    borderRadius: 50,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 18,
+    resizeMode: 'cover',
+  },
+  foodName: {
+    fontSize: 16,
+    fontFamily: 'Poppins_700Bold',
+    textAlign: 'center',
+    marginTop: 5,
+  },
+  priceButton: {
+    width: '100%',
+    height: 35,
+    backgroundColor: 'white',
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  price: {
+    fontSize: 16,
+    fontFamily: 'Poppins_700Bold',
+    textAlign: 'center',
+    marginTop: 2,
+  },
+  heading: {
+    fontSize: 40,
+    fontFamily: 'Poppins_700Bold',
+    textAlign: 'center',
+  },
+});
