@@ -37,7 +37,7 @@
     ],
     "experiments": {
       "typedRoutes": true,
-      "baseUrl": "/rocket-meals-faster"
+      "baseUrl":"/rocket-meals"
     }
   }
 }
