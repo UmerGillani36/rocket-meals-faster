@@ -5,15 +5,20 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/hooks/useTheme';
 import { styles } from './styles';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
+import { ON_LOGOUT } from '@/redux/Types/types';
 
 const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
   navigation,
   state,
 }) => {
   const { theme } = useTheme();
+  const dispatch = useDispatch();
+  const router = useRouter();
   const activeIndex = state.index;
   const { isManagement } = useSelector((state: any) => state.authReducer);
 
@@ -34,13 +39,26 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
     color: isActive(routeName) ? theme.activeText : theme.inactiveText,
   });
 
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.clear();
+      dispatch({ type: ON_LOGOUT });
+      router.replace('/(auth)/login');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
   return (
     <ScrollView
       style={{ ...styles.container, backgroundColor: theme.drawerBg }}
       contentContainerStyle={styles.contentContainer}
     >
       <View style={styles.content}>
-        <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.header}
+          onPress={() => navigation.navigate('foodoffers')}
+        >
           <View style={styles.logoContainer}>
             <Image
               source={require('../../assets/logo/customers/swosy.png')}
@@ -51,7 +69,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
           <Text style={{ ...styles.heading, color: theme.drawerHeading }}>
             SWOSY 2.0
           </Text>
-        </View>
+        </TouchableOpacity>
         <View style={styles.menuContainer}>
           <TouchableOpacity
             style={getMenuItemStyle('foodoffers')}
@@ -85,7 +103,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
           </TouchableOpacity>
           <TouchableOpacity
             style={getMenuItemStyle('campus/index')}
-            onPress={() => navigation.navigate('campus/index')}
+            // onPress={() => navigation.navigate('campus/index')}
           >
             <Octicons
               name='mortar-board'
@@ -98,7 +116,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
           </TouchableOpacity>
           <TouchableOpacity
             style={getMenuItemStyle('housing/index')}
-            onPress={() => navigation.navigate('housing/index')}
+            // onPress={() => navigation.navigate('housing/index')}
           >
             <Octicons
               name='home'
@@ -113,7 +131,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
           </TouchableOpacity>
           <TouchableOpacity
             style={getMenuItemStyle('news/index')}
-            onPress={() => navigation.navigate('news/index')}
+            // onPress={() => navigation.navigate('news/index')}
           >
             <FontAwesome6
               name='newspaper'
@@ -141,44 +159,42 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
               Course Timetable
             </Text>
           </TouchableOpacity>
-          {
-            isManagement && (
-              <TouchableOpacity
-                style={getMenuItemStyle('management/index')}
-                onPress={() => navigation.navigate('management/index')}
-              >
-                <Ionicons
-                  name='bag'
-                  size={28}
-                  color={
-                    isActive('management/index')
-                      ? theme.activeIcon
-                      : theme.inactiveIcon
-                  }
-                />
-                <Text style={getMenuLabelStyle('management/index')}>Management</Text>
-              </TouchableOpacity>
-            )
-          }
+          {isManagement && (
+            <TouchableOpacity
+              style={getMenuItemStyle('management/index')}
+              onPress={() => navigation.navigate('management/index')}
+            >
+              <Ionicons
+                name='bag'
+                size={28}
+                color={
+                  isActive('management/index')
+                    ? theme.activeIcon
+                    : theme.inactiveIcon
+                }
+              />
+              <Text style={getMenuLabelStyle('management/index')}>
+                Management
+              </Text>
+            </TouchableOpacity>
+          )}
           <View style={styles.divider} />
           <TouchableOpacity
-            style={getMenuItemStyle('settings/index')}
-            onPress={() => navigation.navigate('settings/index')}
+            style={getMenuItemStyle('settings')}
+            // onPress={() => navigation.navigate('settings')}
           >
             <Ionicons
               name='settings-outline'
               size={28}
               color={
-                isActive('settings/index')
-                  ? theme.activeIcon
-                  : theme.inactiveIcon
+                isActive('settings') ? theme.activeIcon : theme.inactiveIcon
               }
             />
-            <Text style={getMenuLabelStyle('settings/index')}>Settings</Text>
+            <Text style={getMenuLabelStyle('settings')}>Settings</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={getMenuItemStyle('faq-food/index')}
-            onPress={() => navigation.navigate('faq-food/index')}
+            // onPress={() => navigation.navigate('faq-food/index')}
           >
             <Ionicons
               name='fast-food-outline'
@@ -193,7 +209,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
           </TouchableOpacity>
           <TouchableOpacity
             style={getMenuItemStyle('faq-living/index')}
-            onPress={() => navigation.navigate('faq-living/index')}
+            // onPress={() => navigation.navigate('faq-living/index')}
           >
             <MaterialCommunityIcons
               name='sofa-single-outline'
@@ -207,6 +223,19 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
             <Text style={getMenuLabelStyle('faq-living/index')}>
               Living - Faq
             </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={getMenuItemStyle('faq-living/index')}
+            onPress={() => {
+              handleLogout();
+            }}
+          >
+            <MaterialCommunityIcons
+              name='logout'
+              size={28}
+              color={theme.inactiveIcon}
+            />
+            <Text style={getMenuLabelStyle('faq-living/index')}>Logout</Text>
           </TouchableOpacity>
         </View>
       </View>

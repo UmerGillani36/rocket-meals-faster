@@ -1,43 +1,53 @@
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BottomSheetView } from '@gorhom/bottom-sheet';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import styles from './styles';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/hooks/useTheme';
 import { CanteenProps, CanteenSelectionSheetProps } from './types';
 import { isWeb, canteensData } from '@/constants/Constants';
 import { useRouter } from 'expo-router';
-import { Canteens } from '@/constants/types';
 import { imageAPI } from '@/redux/actions';
 import { SET_SELECTED_CANTEEN } from '@/redux/Types/types';
+import { AntDesign } from '@expo/vector-icons';
+// import { Image } from 'expo-image';
+import { excerpt } from '@/constants/HelperFunctions';
 
-const CanteenSelectionSheet: React.FC<CanteenSelectionSheetProps> = () => {
+const CanteenSelectionSheet: React.FC<CanteenSelectionSheetProps> = ({
+  closeSheet,
+}) => {
   const { theme } = useTheme();
   const router = useRouter();
   const dispatch = useDispatch();
   const canteens = useSelector((state: any) => state.canteenReducer.canteens);
 
-  const getImage = async (imageAssetId: string) => {
-    try {
-      const data = await imageAPI(imageAssetId);
-      console.log("Data: ", data);
-      return '';
-    } catch (e) {
-      console.log("Error: ", e);
-      return '';
-    }
-    // return `https://api.dev.cloud.barista.coffee/assets/${imageAssetId}`;
-  };
-
   const handleSelectCanteen = (canteen: CanteenProps) => {
     dispatch({ type: SET_SELECTED_CANTEEN, payload: canteen });
-    router.push('/(app)/foodoffers');
-  }
+    closeSheet();
+  };
 
   return (
-    <BottomSheetView
+    <BottomSheetScrollView
       style={{ ...styles.sheetView, backgroundColor: theme.sheet.sheetBg }}
+      contentContainerStyle={styles.contentContainer}
     >
+      <View
+        style={{
+          ...styles.sheetHeader,
+          paddingRight: isWeb ? 10 : 0,
+          paddingTop: isWeb ? 10 : 0,
+        }}
+      >
+        <TouchableOpacity
+          style={{
+            ...styles.sheetcloseButton,
+            backgroundColor: theme.sheet.closeBg,
+          }}
+          onPress={closeSheet}
+        >
+          <AntDesign name='close' size={24} color={theme.sheet.closeIcon} />
+        </TouchableOpacity>
+      </View>
       <Text
         style={{
           ...styles.sheetHeading,
@@ -60,7 +70,7 @@ const CanteenSelectionSheet: React.FC<CanteenSelectionSheetProps> = () => {
             style={{
               ...styles.card,
               width: isWeb ? 250 : '48%',
-              height: isWeb ? 200 : 140,
+              height: isWeb ? 200 : 200,
               backgroundColor: theme.card.background,
             }}
             key={canteen.alias}
@@ -69,15 +79,23 @@ const CanteenSelectionSheet: React.FC<CanteenSelectionSheetProps> = () => {
             }}
           >
             <View style={styles.imageContainer}>
-              <Image style={styles.image} source={{ uri: canteensData[index].image }} />
+              <Image
+                style={styles.image}
+                source={{
+                  uri: canteen?.image_url || canteensData[index].image,
+                }}
+                // transition={500}
+                // contentFit='cover'
+                // cachePolicy={'memory-disk'}
+              />
             </View>
             <Text style={{ ...styles.canteenName, color: theme.card.text }}>
-              {canteen.alias}
+              {excerpt(String(canteen.alias), 12)}
             </Text>
           </TouchableOpacity>
         ))}
       </View>
-    </BottomSheetView>
+    </BottomSheetScrollView>
   );
 };
 

@@ -1,3 +1,3 @@
 export * from './Auth/Auth';
-export * from './Canteen/Canteen';
+export * from './Canteens/Canteens';
 export * from './Resources/Resources';

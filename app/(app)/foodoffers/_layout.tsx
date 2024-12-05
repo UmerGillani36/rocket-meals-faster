@@ -1,8 +1,10 @@
-import { useTheme } from '@/context/ThemeContext';
+import React from 'react';
+import { useTheme } from '@/hooks/useTheme';
 import { Stack } from 'expo-router';
 
 export default function FoodOfferLayout() {
   const { theme } = useTheme();
+
   return (
     <Stack
       screenOptions={{
@@ -12,7 +14,10 @@ export default function FoodOfferLayout() {
     >
       <Stack.Screen
         name='index'
-        options={{ title: 'Food Offers', headerShown: true }}
+        options={{
+          title: 'Food Offers',
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name='details/[id]'

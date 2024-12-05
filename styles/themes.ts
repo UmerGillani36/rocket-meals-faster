@@ -49,12 +49,14 @@ export const lightTheme = {
   card: {
     background: '#2E2E2E',
     imageBg: '#414141',
-    text: '#000000',
+    text: '#ffffff',
   },
   screen: {
     background: '#ffffff',
     text: '#000000',
     icon: '#000000',
+    placeholder: '#696969',
+    iconBg: '#3A3A3A',
   },
   header: {
     background: '#ffffff',
@@ -121,6 +123,8 @@ export const darkTheme = {
     background: '#1A1A1A',
     text: '#ffffff',
     icon: '#ffffff',
+    placeholder: '#696969',
+    iconBg: '#2e2e2e',
   },
   header: {
     background: '#2E2E2E',

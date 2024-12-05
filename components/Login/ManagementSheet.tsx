@@ -3,7 +3,7 @@ import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
 import { styles } from './styles';
 import { AntDesign } from '@expo/vector-icons';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/hooks/useTheme';
 import { SheetProps } from './types';
 
 const ManagementSheet: React.FC<SheetProps> = ({ closeSheet, handleLogin }) => {
@@ -97,7 +97,7 @@ const ManagementSheet: React.FC<SheetProps> = ({ closeSheet, handleLogin }) => {
             : theme.sheet.buttonDisabled,
         }}
         disabled={!isFormValid}
-        onPress={() => handleLogin(formState.email, formState.password)}
+        onPress={() => handleLogin(undefined, formState.email, formState.password)}
       >
         <Text style={{ ...styles.sheetLoginLabel }}>Sign In</Text>
       </TouchableOpacity>

@@ -102,7 +102,7 @@ const ManagementModal: React.FC<ManagementModalProps> = ({
               : theme.modal.buttonDisabled,
           }}
           disabled={!isFormValid}
-          onPress={() => handleLogin(formState.email, formState.password)}
+          onPress={() => handleLogin(undefined, formState.email, formState.password)}
         >
           <Text style={{ ...styles.loginLabel }}>Sign In</Text>
         </TouchableOpacity>

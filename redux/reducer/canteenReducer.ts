@@ -1,5 +1,6 @@
 import {
     SET_BUILDINGS,
+    SET_BUSINESS_HOURS,
     SET_CANTEENS,
     SET_FOOD_OFFERS,
     SET_SELECTED_CANTEEN,
@@ -12,6 +13,7 @@ import {
     selectedCanteen: null,
     foodOffers: [],
     selectedCanteenFoodOffers: [],
+    businessHours: [],
   };
   
   const canteensReducer = (state = initialState, actions: any) => {
@@ -44,6 +46,12 @@ import {
         return {
           ...state,
           selectedCanteenFoodOffers: actions.payload,
+        };
+      }
+      case SET_BUSINESS_HOURS: {
+        return {
+          ...state,
+          businessHours: actions.payload,
         };
       }
       default:

@@ -22,7 +22,19 @@ export default StyleSheet.create({
     top: 0,
     left: 0,
     backgroundColor: 'rgba(0,0,0,0.2)',
-    borderRadius: 18,
+    borderTopRightRadius: 18,
+    borderTopLeftRadius: 18,
+  },
+  editImageButton: {
+    width: 35,
+    height: 35,
+    borderRadius: 50,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    position: 'absolute',
+    top: 5,
+    left: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   favContainer: {
     width: 35,
@@ -55,7 +67,8 @@ export default StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
-    borderRadius: 18,
+    borderTopRightRadius: 18,
+    borderTopLeftRadius: 18,
     resizeMode: 'cover',
   },
   foodName: {

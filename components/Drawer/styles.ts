@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
   logoContainer: {
     width: 80,
     height: 80,
-    borderRadius: 50,
+    borderRadius: 8,
     backgroundColor: '#424242',
     justifyContent: 'center',
     alignItems: 'center',
@@ -34,7 +34,6 @@ export const styles = StyleSheet.create({
   logo: {
     width: 72,
     height: 72,
-    borderRadius: 50,
   },
   menuContainer: {
     flex: 1,
@@ -47,7 +46,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 50,
+    borderRadius: 10,
     marginBottom: 5,
   },
   menuLabel: {

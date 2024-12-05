@@ -1,7 +1,7 @@
 export interface ManagementModalProps {
   isVisible: boolean;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  handleLogin: (email: string, password: string) => void;
+  handleLogin: (token: string | undefined, email: string, password: string) => void;
 }
 
 export interface FormProps {
@@ -13,7 +13,7 @@ export interface FormProps {
 
 export interface SheetProps {
   closeSheet: () => void;
-  handleLogin: (email: string, password: string) => void;
+  handleLogin: (token: string | undefined, email: string, password: string) => void;
 }
 
 export interface AttentionSheetProps {

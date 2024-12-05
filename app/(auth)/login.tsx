@@ -1,6 +1,7 @@
+import React from 'react';
 import { View, Text, Alert } from 'react-native';
 import styles from './styles';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/hooks/useTheme';
 import WebSvg from '@/assets/svgs/login_Bg.svg';
 import Form from '@/components/Login/Form';
 import Header from '@/components/Login/Header';
@@ -12,15 +13,17 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import { isWeb } from '@/constants/Constants';
 import { router } from 'expo-router';
 import { ServerAPI } from '@/redux/actions/Auth/Auth';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ON_LOGIN, UPDATE_MANAGEMENT } from '@/redux/Types/types';
 import AttentionSheet from '@/components/Login/AttentionSheet';
 import useToast from '@/hooks/useToast';
 import { updateLoginStatus } from '@/constants/HelperFunctions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DirectusUsers } from '@/constants/types';
 
 export default function Login() {
   const dispatch = useDispatch();
-  const { theme, setThemeMode } = useTheme();
+  const { theme } = useTheme();
   const [isVisible, setIsVisible] = useState(false);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['50%'], []);
@@ -44,53 +47,39 @@ export default function Login() {
   };
 
   const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
+    // console.log('handleSheetChanges', index);
   }, []);
 
   const handleAttentionSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
+    // console.log('handleSheetChanges', index);
   }, []);
 
-  const onSuccessfulLogin = async (token: string) => {
-    console.log('Login Successful with token: ' + token);
-    const result = await ServerAPI.authenticate_with_access_token(token);
-    dispatch({ type: ON_LOGIN, payload: result });
-    const user = ServerAPI.getMe();
-    console.log('User: ', user);
-    updateLoginStatus(dispatch);
-    router.replace('/(app)');
-  };
+  const handleUserLogin = async (token?: string, email?: string, password?: string) => {
+    try {
+      // Authenticate based on token or credentials
+      if (token) {
+        await ServerAPI.authenticateWithAccessToken(token);
+      } else if (email && password) {
+        const result = await ServerAPI.authenticateWithEmailAndPassword(email, password);
+        if (!result) throw new Error('Invalid credentials');
+        dispatch({ type: UPDATE_MANAGEMENT, payload: true });
+      }
 
-  const handleLoginWithManagementCredentials = (
-    email: string,
-    password: string
-  ) => {
-    ServerAPI.authenticate_with_email_and_password(email, password)
-      .then((result) => {
-        if (result) {
-          dispatch({ type: ON_LOGIN, payload: result });
-          dispatch({ type: UPDATE_MANAGEMENT, payload: true });
-          const user = ServerAPI.getMe();
-          console.log('User: ', user);
-          updateLoginStatus(dispatch);
-          router.replace('/(app)');
-        }
-      })
-      .catch((e) => {
-        toast('Invalid credentials', 'error');
-      });
+      // Fetch and process user data
+      const user = await ServerAPI.getMe();
+      updateLoginStatus(dispatch, user as DirectusUsers);
+      router.replace('/(app)');
+    } catch (error) {
+      console.error('Error during login: ', error);
+      if (!token) toast('Invalid credentials', 'error'); // Only show toast for credential-based login
+    }
   };
 
   const handleAnonymousLogin = () => {
-    console.log('Anonymous Login');
-    dispatch({ type: ON_LOGIN, payload: null });
-    updateLoginStatus(dispatch);
+    // @ts-ignore
+    updateLoginStatus(dispatch, { id: '' });
     router.replace('/(app)');
   };
-
-  useEffect(() => {
-    setThemeMode('dark');
-  }, []);
 
   return (
     <View
@@ -101,6 +90,16 @@ export default function Login() {
         justifyContent: isWeb ? 'space-between' : 'flex-start',
       }}
     >
+      <View style={{ ...styles.loginContainer, width: isWeb ? '50%' : '100%' }}>
+        <Header />
+        <Form
+          setIsVisible={setIsVisible}
+          openSheet={openSheet}
+          openAttentionSheet={openAttentionSheet}
+          onSuccess={handleUserLogin}
+        />
+        <Footer />
+      </View>
       {isWeb && (
         <View
           style={{
@@ -128,21 +127,11 @@ export default function Login() {
           </Text>
         </View>
       )}
-      <View style={{ ...styles.loginContainer, width: isWeb ? '50%' : '100%' }}>
-        <Header />
-        <Form
-          setIsVisible={setIsVisible}
-          openSheet={openSheet}
-          openAttentionSheet={openAttentionSheet}
-          onSuccess={onSuccessfulLogin}
-        />
-        <Footer />
-      </View>
       {isWeb ? (
         <ManagementModal
           isVisible={isVisible}
           setIsVisible={setIsVisible}
-          handleLogin={handleLoginWithManagementCredentials}
+          handleLogin={handleUserLogin}
         />
       ) : (
         <BottomSheet
@@ -158,7 +147,7 @@ export default function Login() {
         >
           <ManagementSheet
             closeSheet={closeSheet}
-            handleLogin={handleLoginWithManagementCredentials}
+            handleLogin={handleUserLogin}
           />
         </BottomSheet>
       )}
@@ -173,7 +162,10 @@ export default function Login() {
           borderTopLeftRadius: 30,
         }}
       >
-        <AttentionSheet closeSheet={closeAttentionSheet} handleLogin={handleAnonymousLogin} />
+        <AttentionSheet
+          closeSheet={closeAttentionSheet}
+          handleLogin={handleAnonymousLogin}
+        />
       </BottomSheet>
     </View>
   );

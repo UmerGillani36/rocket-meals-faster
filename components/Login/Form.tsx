@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { Platform, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
-import Server from '@/constants/ServerUrl';
 import Checkbox from 'expo-checkbox';
 import GoogleIcon from '@/assets/icons/google.svg';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/hooks/useTheme';
 import { UrlHelper } from '@/constants/UrlHelper';
 import { styles } from './styles';
 import { FormProps } from './types';
 import { generateCodeChallenge, generateCodeVerifier } from '@/constants/HelperFunctions';
-import { isWeb } from '@/constants/Constants';
+import usePlatformHelper from '@/helper/platformHelper';
+import { fetchAuthorizationUrl, fetchToken } from '@/redux/actions/ApiService/ApiService';
+import { handleNativeLogin, handleWebLogin } from '@/helper/authHelper';
 
 const LoginForm: React.FC<FormProps> = ({
   setIsVisible,
@@ -19,117 +20,43 @@ const LoginForm: React.FC<FormProps> = ({
 }) => {
   const [isChecked, setChecked] = useState(false);
   const { theme } = useTheme();
+  const { isWeb } = usePlatformHelper();
 
-  const getToken = async (codeVerifier: String, code: String) => {
-    console.log('Login');
+  const getToken = async (codeVerifier: string, code: string) => {
     try {
-      // Fetching refresh token explicitly if not set by session cookie
-      const token_url = Server.ServerUrl + '/proof-key-code-exchange/token';
+      const { directus_refresh_token } = await fetchToken(codeVerifier, code);
 
-      const requestBody = {
-        code_verifier: codeVerifier,
-        code: code,
-      };
-
-      const response = await fetch(token_url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-      });
-
-      //console.log(response);
-      const json = await response.json();
-      // const directus_session_token = json.directus_session_token; // not send anymore
-      const directus_refresh_token = json?.directus_refresh_token || null;
-      console.log(
-        'Login SuccessFull directus_refresh_token: ' + directus_refresh_token
-      );
-      if (directus_refresh_token) {
-        if (onSuccess) {
-          onSuccess(directus_refresh_token);
-        }
+      if (directus_refresh_token && onSuccess) {
+        onSuccess(directus_refresh_token);
       }
-    } catch (err: any) {
-      console.log('error: ');
-      console.log(err);
-      console.log(err.toString());
+    } catch (error) {
+      console.error('Error fetching token:', error);
     }
   };
 
-  const onPressLogin = async (provider: String) => {
-    const authorizeUrl =
-      Server.ServerUrl + '/proof-key-code-exchange/authorize';
-    const desiredRedirectURL = UrlHelper.getURLToLogin();
-    const code_challenge_method = 'S256';
-    const code_verifier = await generateCodeVerifier();
-    const code_challenge = await generateCodeChallenge(code_verifier);
-
-    const requestBody = {
-      provider: provider,
-      redirect_url: desiredRedirectURL,
-      code_challenge_method: code_challenge_method,
-      code_challenge: code_challenge,
-    };
-
+  const onPressLogin = async (provider: string) => {
     try {
-      const response = await fetch(authorizeUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-      });
 
-      const json = await response.json();
+      const desiredRedirectURL = UrlHelper.getURLToLogin();
+      const codeVerifier = await generateCodeVerifier();
+      const codeChallenge = await generateCodeChallenge(codeVerifier);
 
-      const urlToProviderLogin = json.urlToProviderLogin;
+      const payload = {
+        provider,
+        redirect_url: desiredRedirectURL,
+        code_challenge_method: 'S256',
+        code_challenge: codeChallenge,
+      };
 
-      if (Platform.OS === 'web') {
-        const WEB_CHECK_INTERVAL = 25; // ms , set to 25ms to get a fast response
+      const { urlToProviderLogin } = await fetchAuthorizationUrl(payload);
 
-        // Web-specific logic
-        const authWindow = window.open(
-          urlToProviderLogin,
-          '_blank',
-          'width=500,height=600'
-        );
-        const authCheckInterval = setInterval(() => {
-          if (!!authWindow) {
-            try {
-              if (authWindow.closed) {
-                clearInterval(authCheckInterval);
-              } else {
-                const currentLocationNewWindow = new URL(
-                  authWindow.location.href
-                );
-                //console.log("check current location: "+currentLocationNewWindow);
-
-                if (
-                  (currentLocationNewWindow + '').startsWith(
-                    desiredRedirectURL + ''
-                  )
-                ) {
-                  //console.log("yes, arrived at the desired redirect url")
-                  authWindow.close();
-                  const code_splits = (currentLocationNewWindow + '').split(
-                    'code='
-                  );
-                  const code = code_splits[1];
-
-                  clearInterval(authCheckInterval);
-                  getToken(code_verifier, code);
-                }
-              }
-            } catch (err) {
-              console.log(err);
-            }
-          }
-        }, WEB_CHECK_INTERVAL);
+      if (isWeb()) {
+        await handleWebLogin(urlToProviderLogin, desiredRedirectURL, codeVerifier, getToken);
+      } else {
+        await handleNativeLogin(urlToProviderLogin, desiredRedirectURL, codeVerifier, getToken);
       }
-    } catch (err: any) {
-      console.log(err);
+    } catch (error) {
+      console.error('Login Error:', error);
     }
   };
 
@@ -137,7 +64,7 @@ const LoginForm: React.FC<FormProps> = ({
     <View
       style={{
         ...styles.loginForm,
-        alignItems: isWeb ? 'flex-start' : 'center',
+        alignItems: isWeb() ? 'flex-start' : 'center',
       }}
     >
       <Text style={{ ...styles.heading, color: theme.login.text }}>
@@ -203,7 +130,7 @@ const LoginForm: React.FC<FormProps> = ({
         </Text>
         <TouchableOpacity
           onPress={() => {
-            if (isWeb) {
+            if (isWeb()) {
               setIsVisible(true);
             } else {
               openSheet();
@@ -226,7 +153,7 @@ const LoginForm: React.FC<FormProps> = ({
           style={{
             ...styles.checkboxLabel,
             color: theme.login.text,
-            width: isWeb ? '100%' : '90%',
+            width: isWeb() ? '100%' : '90%',
           }}
         >
           I agree to the General Terms and Conditions and declare that I have

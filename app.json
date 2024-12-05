@@ -36,8 +36,7 @@
       ]
     ],
     "experiments": {
-      "typedRoutes": true,
-      "baseUrl":"/rocket-meals"
+      "typedRoutes": true
     }
   }
 }

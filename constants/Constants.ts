@@ -1,7 +1,23 @@
 import { Platform } from 'react-native';
 
 export const isWeb = Platform.OS === 'web';
+export const links = [
+  { title: 'About Us', onPress: () => {} },
+  { title: 'Accessibility', onPress: () => {} },
+  { title: 'Privacy Policy', onPress: () => {} },
+  { title: 'General Terms and Conditions', onPress: () => {} },
+];
 
+export const nutritionLabels = {
+  fat_g: 'Fat',
+  protein_g: 'Protein',
+  saturated_fat_g: 'SaturatedFat',
+  sugar_g: 'Sugar',
+  carbohydrate_g: 'Carbohydrate',
+  calories_kcal: 'Energy',
+  fiber_g: 'Fiber',
+  salt_g: 'Salt',
+}
 
 export const canteensData = [
   {
@@ -102,3 +118,89 @@ export const FOOD_DATA = [
     price: 6.99,
   },
 ];
+export const campuses = [
+  {
+    id: 1,
+    campusName: 'Green Valley University',
+    imageUrl: 'https://images.unsplash.com/photo-1530695801911-f188c516550a',
+    distance: 1200, // in meters
+  },
+  {
+    id: 2,
+    campusName: 'Sunrise College',
+    imageUrl: 'https://images.unsplash.com/photo-1538334421852-687c439c92f4',
+    distance: 2300, // in meters
+  },
+  {
+    id: 3,
+    campusName: 'Ocean View Institute',
+    imageUrl: 'https://images.unsplash.com/photo-1572701190183-822417d47bda',
+    distance: 1500, // in meters
+  },
+  {
+    id: 4,
+    campusName: 'Maple Leaf Academy',
+    imageUrl: 'https://images.unsplash.com/photo-1482739627503-c2cb4fc17328',
+    distance: 3100, // in meters
+  },
+  {
+    id: 5,
+    campusName: 'Pine Hill University',
+    imageUrl: 'https://images.unsplash.com/photo-1530695801911-f188c516550a',
+    distance: 2500, // in meters
+  },
+  {
+    id: 6,
+    campusName: 'Riverstone College',
+    imageUrl: 'https://images.unsplash.com/photo-1538334421852-687c439c92f4',
+    distance: 4000, // in meters
+  },
+  {
+    id: 7,
+    campusName: 'Starlight Institute',
+    imageUrl: 'https://images.unsplash.com/photo-1572701190183-822417d47bda',
+    distance: 1900, // in meters
+  },
+  {
+    id: 8,
+    campusName: 'Horizon Academy',
+    imageUrl: 'https://images.unsplash.com/photo-1482739627503-c2cb4fc17328',
+    distance: 2700, // in meters
+  },
+  {
+    id: 9,
+    campusName: 'Evergreen University',
+    imageUrl: 'https://images.unsplash.com/photo-1530695801911-f188c516550a',
+    distance: 3400, // in meters
+  },
+  {
+    id: 10,
+    campusName: 'Summit College',
+    imageUrl: 'https://images.unsplash.com/photo-1538334421852-687c439c92f4',
+    distance: 4100, // in meters
+  },
+];
+
+export const blurhash =
+  '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
+
+  export const languageCode = 'en-US';
+  export const itemStatus = 'published';
+  export const studentUnionUrl = 'https://www.studentenwerk-osnabrueck.de/';
+  // export const languageCode = 'de-DE';
+
+
+  // let assetId: string | DirectusFiles | null | undefined = undefined
+  // let image_url: string | undefined = undefined
+  // let thumb_hash: string | undefined = undefined
+  // if (typeof resource !== 'string') {
+  //   if (resource?.image) {
+  //     assetId = resource.image
+  //   }
+  //   if (resource?.image_remote_url) {
+  //     image_url = resource.image_remote_url
+  //   }
+  //   if (resource?.image_thumb_hash) {
+  //     thumb_hash = resource.image_thumb_hash
+  //   }
+  // }

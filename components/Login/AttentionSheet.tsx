@@ -1,7 +1,7 @@
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/hooks/useTheme';
 import { AttentionSheetProps } from './types';
 import { AntDesign } from '@expo/vector-icons';
 import { styles } from './styles';

@@ -2,16 +2,13 @@ import { ScrollView, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
 import styles from './styles';
 import { constants } from '@/constants/privacy-policy';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/hooks/useTheme';
 import RedirectButton from '@/components/RedirectButton';
 import CustomCollapsible from '@/components/CustomCollapsible/CustomCollapsible';
 
 const index = () => {
-  const { theme, setThemeMode } = useTheme();
+  const { theme } = useTheme();
 
-  useEffect(() => {
-    setThemeMode('dark');
-  }, []);
 
   return (
     <ScrollView

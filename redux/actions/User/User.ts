@@ -11,10 +11,7 @@ import {ServerAPI} from '@/redux/actions/Auth/Auth';
 // import {RoleHelper} from "@/helper/role/RoleHelper";
 // import {PermissionHelper, PermissionHelperObject} from "@/helper/permission/PermissionHelper";
 
-export type CachedUserInformation = {
-    data: DirectusUsers | undefined,
-    loggedIn: boolean
-}
+export type CachedUserInformation = DirectusUsers | undefined;
 
 export function useLogoutCallback(): () => void {
 	return async () => {
@@ -58,8 +55,8 @@ function isDirectusUserAnonymous(user: DirectusUsers | undefined) {
  * Used in the RootAuthUser Flow Loader where we want to check the cache
  * @param user
  */
-export function getIsCachedUserAnonymous(user: CachedUserInformation | undefined | null): boolean {
-	return isDirectusUserAnonymous(user?.data);
+export function getIsCachedUserAnonymous(user: CachedUserInformation | undefined): boolean {
+	return isDirectusUserAnonymous(user);
 }
 
 export function useIsCurrentUserAnonymous() {
@@ -123,6 +120,6 @@ export function getAnonymousUser(): any {
 
 export function isUserLoggedIn(): boolean {
     const state = configureStore.getState();
-    const userLoggedIn = state.authReducer.user.loggedIn;
+    const userLoggedIn = state.authReducer.loggedIn;
 	return !!userLoggedIn
 }

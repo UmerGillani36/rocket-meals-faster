@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import React, { useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import Logo from '@/assets/icons/swosy-rect.svg';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/hooks/useTheme';
 import { styles } from './styles';
 import { isWeb } from '@/constants/Constants';
 

@@ -1,0 +1,13 @@
+{
+    "CHECK_FOR_APP_UPDATES": "Check for app updates",
+    "DOWNLOAD_NEW_APP_UPDATE": "Download new app update",
+    "SYNC_SERVER_SETTINGS": "Sync server settings",
+    "SYNC_DATABASE": "Sync database",
+    "SYNC_USER_SETTINGS": "Sync user settings",
+    "CHECK_USER_AUTHENTICATION": "Check user authentication",
+    "CHECK_SERVER_STATUS": "Check server status",
+    "SERVER_IS_OFFLINE": "Server is offline",
+    "CONTINUE_WITH_CACHE": "Continue with cache",
+    "RETRY_IN_SECONDS": "Retry in seconds"
+  }
+  

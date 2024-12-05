@@ -4,10 +4,13 @@ export default StyleSheet.create({
   sheetView: {
     width: '100%',
     height: '100%',
-    alignItems: 'center',
     borderTopRightRadius: 28,
     borderTopLeftRadius: 28,
     padding: 10,
+    paddingBottom: 0,
+  },
+  contentContainer: {
+    alignItems: 'center',
   },
   sheetHeader: {
     width: '100%',
@@ -31,25 +34,27 @@ export default StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     rowGap: 20,
+    paddingBottom: 20,
   },
   card: {
     borderRadius: 18,
   },
   imageContainer: {
     width: '100%',
-    height: '80%',
+    height: '75%',
     borderRadius: 18,
   },
   image: {
     width: '100%',
     height: '100%',
-    borderRadius: 18,
+    borderTopRightRadius: 18,
+    borderTopLeftRadius: 18,
     resizeMode: 'cover',
   },
   canteenName: {
     fontSize: 18,
     fontFamily: 'Poppins_700Bold',
     textAlign: 'center',
-    marginTop: 5,
+    marginTop: 10,
   },
 });

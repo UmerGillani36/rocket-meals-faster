@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styles from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
 import Collapsible from 'react-native-collapsible';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/hooks/useTheme';
 import { CustomCollapsibleProps } from './types';
 
 const CustomCollapsible: React.FC<CustomCollapsibleProps> = ({

@@ -1,5 +1,5 @@
-import React from "react";
-import { Slot } from "expo-router";
+import React from 'react';
+import { Slot } from 'expo-router';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import {
   useFonts,
@@ -21,15 +21,20 @@ import {
   Poppins_800ExtraBold_Italic,
   Poppins_900Black,
   Poppins_900Black_Italic,
-} from "@expo-google-fonts/poppins";
-import { ActivityIndicator, View } from "react-native";
-import { ThemeProvider } from "@/context/ThemeContext";
+} from '@expo-google-fonts/poppins';
+import { SafeAreaView, View } from 'react-native';
+import { ThemeProvider } from '@/context/ThemeContext';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import { configureStore, persistor } from "@/redux/store";
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { configureStore, persistor } from '@/redux/store';
+import { Image } from 'expo-image';
+import { ServerAPI } from '@/redux/actions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from '@/hooks/useTheme';
 
 export default function Layout() {
+  const { theme } = useTheme();
   const [fontsLoaded] = useFonts({
     Poppins_100Thin,
     Poppins_100Thin_Italic,
@@ -53,11 +58,37 @@ export default function Layout() {
 
   if (!fontsLoaded) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size='large' color='#000' />
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#ffffff',
+        }}
+      >
+        <Image
+          source={require('@/assets/logo/customers/swosy.png')}
+          style={{ width: 150, height: 150 }}
+          contentFit='cover'
+          transition={500}
+        />
       </View>
     );
   }
+
+  ServerAPI.createAuthentificationStorage(
+    async () => {
+      const storedData = await AsyncStorage.getItem('auth_data');
+      return storedData ? JSON.parse(storedData) : null;
+    },
+    async (value) => {
+      if (value) {
+        await AsyncStorage.setItem('auth_data', JSON.stringify(value));
+      } else {
+        await AsyncStorage.removeItem('auth_data');
+      }
+    }
+  );
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -65,7 +96,13 @@ export default function Layout() {
         <PersistGate loading={null} persistor={persistor}>
           <RootSiblingParent>
             <ThemeProvider>
-              <Slot />
+              <SafeAreaView
+                style={{ flex: 1, backgroundColor: theme.screen.iconBg }}
+              >
+                {/* <I18nextProvider i18n={i18n}> */}
+                <Slot />
+                {/* </I18nextProvider> */}
+              </SafeAreaView>
             </ThemeProvider>
           </RootSiblingParent>
         </PersistGate>

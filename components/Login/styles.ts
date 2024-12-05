@@ -76,6 +76,8 @@ export const styles = StyleSheet.create({
   },
   checkbox: {
     marginRight: 15,
+    width: 20,
+    height: 20,
   },
   checkboxLabel: {
     fontSize: 12,
@@ -91,10 +93,8 @@ export const styles = StyleSheet.create({
   link: {
     fontSize: 14,
     fontFamily: 'Poppins_400Regular',
-    color: '#696969',
   },
   divider: {
-    color: '#696969',
     marginHorizontal: 10,
     marginBottom: 2,
   },
