@@ -47,8 +47,6 @@
       "expo-localization"
     ],
     "experiments": {
-      "typedRoutes": true,
-       "baseUrl": "/rocket-meals-faster"
-    }
+      "typedRoutes": true    }
   }
 }
