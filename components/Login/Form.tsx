@@ -7,9 +7,15 @@ import { useTheme } from '@/hooks/useTheme';
 import { UrlHelper } from '@/constants/UrlHelper';
 import { styles } from './styles';
 import { FormProps } from './types';
-import { generateCodeChallenge, generateCodeVerifier } from '@/constants/HelperFunctions';
+import {
+  generateCodeChallenge,
+  generateCodeVerifier,
+} from '@/constants/HelperFunctions';
 import usePlatformHelper from '@/helper/platformHelper';
-import { fetchAuthorizationUrl, fetchToken } from '@/redux/actions/ApiService/ApiService';
+import {
+  fetchAuthorizationUrl,
+  fetchToken,
+} from '@/redux/actions/ApiService/ApiService';
 import { handleNativeLogin, handleWebLogin } from '@/helper/authHelper';
 
 const LoginForm: React.FC<FormProps> = ({
@@ -36,7 +42,6 @@ const LoginForm: React.FC<FormProps> = ({
 
   const onPressLogin = async (provider: string) => {
     try {
-
       const desiredRedirectURL = UrlHelper.getURLToLogin();
       const codeVerifier = await generateCodeVerifier();
       const codeChallenge = await generateCodeChallenge(codeVerifier);
@@ -51,9 +56,19 @@ const LoginForm: React.FC<FormProps> = ({
       const { urlToProviderLogin } = await fetchAuthorizationUrl(payload);
 
       if (isWeb()) {
-        await handleWebLogin(urlToProviderLogin, desiredRedirectURL, codeVerifier, getToken);
+        await handleWebLogin(
+          urlToProviderLogin,
+          desiredRedirectURL,
+          codeVerifier,
+          getToken
+        );
       } else {
-        await handleNativeLogin(urlToProviderLogin, desiredRedirectURL, codeVerifier, getToken);
+        await handleNativeLogin(
+          urlToProviderLogin,
+          desiredRedirectURL,
+          codeVerifier,
+          getToken
+        );
       }
     } catch (error) {
       console.error('Login Error:', error);

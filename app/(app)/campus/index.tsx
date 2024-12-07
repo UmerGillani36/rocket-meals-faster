@@ -16,7 +16,7 @@ import {
   DrawerNavigationProp,
 } from '@react-navigation/drawer';
 import { RootDrawerParamList } from './types';
-import { useNavigation } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import BuildingItem from '@/components/BuildingItem/BuildingItem';
 
 const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
@@ -24,6 +24,13 @@ const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
   const drawerNavigation =
     useNavigation<DrawerNavigationProp<RootDrawerParamList>>();
   const [query, setQuery] = useState<string>('');
+
+  const handleNavigation = () => {
+    router.push({
+      pathname: '/(app)/campus/details/[id]',
+      params: { id: '123' },
+    });
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.screen.background }}>
@@ -89,6 +96,7 @@ const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
                 imageUrl={campus.imageUrl}
                 distance={campus.distance}
                 campusName={campus.campusName}
+                handleNavigation={handleNavigation}
               />
             ))}
           </View>

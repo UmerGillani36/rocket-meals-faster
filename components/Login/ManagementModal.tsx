@@ -1,10 +1,16 @@
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
-import Modal from "react-native-modal";
-import { styles } from "./styles";
-import { useTheme } from "@/context/ThemeContext";
-import { AntDesign } from "@expo/vector-icons";
-import { ManagementModalProps } from "./types";
+import {
+  Dimensions,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import Modal from 'react-native-modal';
+import { styles } from './styles';
+import { useTheme } from '@/context/ThemeContext';
+import { AntDesign } from '@expo/vector-icons';
+import { ManagementModalProps } from './types';
 
 const ManagementModal: React.FC<ManagementModalProps> = ({
   isVisible,
@@ -14,8 +20,8 @@ const ManagementModal: React.FC<ManagementModalProps> = ({
   const { theme } = useTheme();
 
   const [formState, setFormState] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
     isEmailValid: false,
     isPasswordValid: false,
   });
@@ -39,10 +45,43 @@ const ManagementModal: React.FC<ManagementModalProps> = ({
 
   const isFormValid = formState.isEmailValid && formState.isPasswordValid;
 
+  const getModalWidth = (windowWidth: number) => {
+    if (windowWidth < 800) return '100%';
+    if (windowWidth >= 800 && windowWidth <= 1200) return 700;
+    return 600;
+  };
+
+  const [modalWidth, setModalWidth] = useState(() => {
+    const windowWidth = Dimensions.get('window').width;
+    return getModalWidth(windowWidth);
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      const windowWidth = Dimensions.get('window').width;
+
+      setModalWidth(getModalWidth(windowWidth));
+    };
+
+    const subscription = Dimensions.addEventListener('change', handleResize);
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   return (
-    <Modal isVisible={isVisible} style={styles.modalContainer}>
+    <Modal
+      isVisible={isVisible}
+      style={styles.modalContainer}
+      onBackdropPress={() => setIsVisible(false)}
+    >
       <View
-        style={{ ...styles.modalView, backgroundColor: theme.modal.modalBg }}
+        style={{
+          ...styles.modalView,
+          backgroundColor: theme.modal.modalBg,
+          width: modalWidth,
+        }}
       >
         <View style={styles.modalHeader}>
           <TouchableOpacity
@@ -52,13 +91,25 @@ const ManagementModal: React.FC<ManagementModalProps> = ({
             }}
             onPress={() => setIsVisible(false)}
           >
-            <AntDesign name="close" size={28} color={theme.modal.closeIcon} />
+            <AntDesign name='close' size={28} color={theme.modal.closeIcon} />
           </TouchableOpacity>
         </View>
-        <Text style={{ ...styles.modalHeading, color: theme.modal.text }}>
+        <Text
+          style={{
+            ...styles.modalHeading,
+            color: theme.modal.text,
+            fontSize: Dimensions.get('window').width < 500 ? 26 : 36,
+          }}
+        >
           Management Login
         </Text>
-        <Text style={{ ...styles.modalSubHeading, color: theme.modal.text }}>
+        <Text
+          style={{
+            ...styles.modalSubHeading,
+            color: theme.modal.text,
+            fontSize: Dimensions.get('window').width < 500 ? 16 : 18,
+          }}
+        >
           Sign in with open account
         </Text>
         <TextInput
@@ -70,12 +121,13 @@ const ManagementModal: React.FC<ManagementModalProps> = ({
               ? theme.modal.inputBorderValid
               : theme.modal.inputBorderInvalid,
             borderWidth: 1,
+            width: Dimensions.get('window').width < 700 ? '100%' : '80%',
           }}
           cursorColor={theme.modal.text}
           placeholderTextColor={theme.modal.placeholder}
           onChangeText={handleEmailChange}
           value={formState.email}
-          placeholder="You@swosy.com"
+          placeholder='You@swosy.com'
         />
         <TextInput
           style={{
@@ -86,13 +138,14 @@ const ManagementModal: React.FC<ManagementModalProps> = ({
               ? theme.modal.inputBorderValid
               : theme.modal.inputBorderInvalid,
             borderWidth: 1,
+            width: Dimensions.get('window').width < 700 ? '100%' : '80%',
           }}
           onChangeText={handlePasswordChange}
           cursorColor={theme.modal.text}
           placeholderTextColor={theme.modal.placeholder}
           value={formState.password}
           secureTextEntry
-          placeholder="Password"
+          placeholder='Password'
         />
         <TouchableOpacity
           style={{
@@ -100,9 +153,12 @@ const ManagementModal: React.FC<ManagementModalProps> = ({
             backgroundColor: isFormValid
               ? theme.primary
               : theme.modal.buttonDisabled,
+            width: Dimensions.get('window').width < 500 ? '100%' : '80%',
           }}
           disabled={!isFormValid}
-          onPress={() => handleLogin(undefined, formState.email, formState.password)}
+          onPress={() =>
+            handleLogin(undefined, formState.email, formState.password)
+          }
         >
           <Text style={{ ...styles.loginLabel }}>Sign In</Text>
         </TouchableOpacity>

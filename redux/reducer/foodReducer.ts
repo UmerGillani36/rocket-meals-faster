@@ -1,10 +1,11 @@
-import { DELETE_FOOD_FEEDBACK_LOCAL, DELETE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES_LOCAL, UPDATE_FOOD_FEEDBACK_LABELS, UPDATE_FOOD_FEEDBACK_LOCAL, UPDATE_MARKINGS, UPDATE_OWN_FOOD_FEEDBACK, UPDATE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES, UPDATE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES_LOCAL } from '@/redux/Types/types';
+import { DELETE_FOOD_FEEDBACK_LOCAL, DELETE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES_LOCAL, SET_SELECTED_FOOD_MARKINGS, UPDATE_FOOD_FEEDBACK_LABELS, UPDATE_FOOD_FEEDBACK_LOCAL, UPDATE_MARKINGS, UPDATE_OWN_FOOD_FEEDBACK, UPDATE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES, UPDATE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES_LOCAL } from '@/redux/Types/types';
   
   const initialState = {
     foodFeedbackLabels: [],
     ownFoodFeedbacks: [],
     ownfoodFeedbackLabelEntries: [],
     markings: [],
+    selectedFoodMarkings: [],
   };
   
   const foodReducer = (state = initialState, actions: any) => {
@@ -83,6 +84,12 @@ import { DELETE_FOOD_FEEDBACK_LOCAL, DELETE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES_LOCA
         markings: actions.payload,
     };
 }
+  case SET_SELECTED_FOOD_MARKINGS: {
+    return {
+        ...state,
+        selectedFoodMarkings: actions.payload,
+    };
+  }
       default:
         return state;
     }

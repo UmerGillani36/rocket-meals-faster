@@ -7,12 +7,14 @@ import { useTheme } from '@/hooks/useTheme';
 import { useSelector } from 'react-redux';
 import styles from './styles';
 import { BuildingItemProps } from './types';
+import { router } from 'expo-router';
 
 const BuildingItem: React.FC<BuildingItemProps> = ({
   id,
   imageUrl,
   distance,
   campusName,
+  handleNavigation,
 }) => {
   const { theme } = useTheme();
 
@@ -26,6 +28,7 @@ const BuildingItem: React.FC<BuildingItemProps> = ({
         height: isWeb ? 300 : 250,
         backgroundColor: theme.card.background,
       }}
+      onPress={handleNavigation}
       key={id}
     >
       <View

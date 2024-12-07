@@ -48,4 +48,13 @@ export default StyleSheet.create({
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
   },
+  feebackContainer: {
+    width: '100%',
+    marginTop: 20,
+  },
+  foodLabels: {
+    fontSize: 24,
+    fontFamily: 'Poppins_700Bold',
+  },
+  dummy: {},
 });

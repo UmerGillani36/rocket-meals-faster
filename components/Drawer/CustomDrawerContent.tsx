@@ -102,21 +102,19 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={getMenuItemStyle('campus/index')}
-            // onPress={() => navigation.navigate('campus/index')}
+            style={getMenuItemStyle('campus')}
+            onPress={() => navigation.navigate('campus')}
           >
             <Octicons
               name='mortar-board'
               size={28}
-              color={
-                isActive('campus/index') ? theme.activeIcon : theme.inactiveIcon
-              }
+              color={isActive('campus') ? theme.activeIcon : theme.inactiveIcon}
             />
-            <Text style={getMenuLabelStyle('campus/index')}>Campus</Text>
+            <Text style={getMenuLabelStyle('campus')}>Campus</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={getMenuItemStyle('housing/index')}
-            // onPress={() => navigation.navigate('housing/index')}
+            onPress={() => navigation.navigate('housing/index')}
           >
             <Octicons
               name='home'
@@ -131,7 +129,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
           </TouchableOpacity>
           <TouchableOpacity
             style={getMenuItemStyle('news/index')}
-            // onPress={() => navigation.navigate('news/index')}
+            onPress={() => navigation.navigate('news/index')}
           >
             <FontAwesome6
               name='newspaper'
@@ -181,7 +179,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
           <View style={styles.divider} />
           <TouchableOpacity
             style={getMenuItemStyle('settings')}
-            // onPress={() => navigation.navigate('settings')}
+            onPress={() => navigation.navigate('settings')}
           >
             <Ionicons
               name='settings-outline'

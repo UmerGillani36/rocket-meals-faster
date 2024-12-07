@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert, Dimensions } from 'react-native';
 import styles from './styles';
 import { useTheme } from '@/hooks/useTheme';
 import WebSvg from '@/assets/svgs/login_Bg.svg';
@@ -29,6 +29,10 @@ export default function Login() {
   const snapPoints = useMemo(() => ['50%'], []);
   const attentionSheetRef = useRef<BottomSheet>(null);
   const attentionSnapPoints = useMemo(() => ['70%'], []);
+  const [isWebVisible, setIsWebVisible] = useState(
+    Dimensions.get('window').width > 500
+  );
+
   const toast = useToast();
 
   const openSheet = () => {
@@ -54,13 +58,20 @@ export default function Login() {
     // console.log('handleSheetChanges', index);
   }, []);
 
-  const handleUserLogin = async (token?: string, email?: string, password?: string) => {
+  const handleUserLogin = async (
+    token?: string,
+    email?: string,
+    password?: string
+  ) => {
     try {
       // Authenticate based on token or credentials
       if (token) {
         await ServerAPI.authenticateWithAccessToken(token);
       } else if (email && password) {
-        const result = await ServerAPI.authenticateWithEmailAndPassword(email, password);
+        const result = await ServerAPI.authenticateWithEmailAndPassword(
+          email,
+          password
+        );
         if (!result) throw new Error('Invalid credentials');
         dispatch({ type: UPDATE_MANAGEMENT, payload: true });
       }
@@ -81,6 +92,16 @@ export default function Login() {
     router.replace('/(app)');
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsWebVisible(Dimensions.get('window').width > 650);
+    };
+
+    const subscription = Dimensions.addEventListener('change', handleResize);
+
+    return () => subscription?.remove();
+  }, []);
+
   return (
     <View
       style={{
@@ -90,7 +111,12 @@ export default function Login() {
         justifyContent: isWeb ? 'space-between' : 'flex-start',
       }}
     >
-      <View style={{ ...styles.loginContainer, width: isWeb ? '50%' : '100%' }}>
+      <View
+        style={{
+          ...styles.loginContainer,
+          width: isWeb && isWebVisible ? '50%' : '100%',
+        }}
+      >
         <Header />
         <Form
           setIsVisible={setIsVisible}
@@ -100,7 +126,7 @@ export default function Login() {
         />
         <Footer />
       </View>
-      {isWeb && (
+      {isWeb && isWebVisible && (
         <View
           style={{
             ...styles.webContainer,

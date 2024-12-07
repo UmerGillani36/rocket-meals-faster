@@ -3,4 +3,5 @@ export interface BuildingItemProps {
   distance: number;
   imageUrl: string;
   campusName: string;
+  handleNavigation?: () => void;
 }

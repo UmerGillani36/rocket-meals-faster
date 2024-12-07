@@ -24,8 +24,8 @@ import FoodItem from '@/components/FoodItem/FoodItem';
 import { useFocusEffect, useNavigation, useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchFoodOffersByCanteen } from '@/redux/actions/FoodOffers/FoodOffers';
-import { SET_SELECTED_CANTEEN_FOOD_OFFERS } from '@/redux/Types/types';
-import { Foodoffers } from '@/constants/types';
+import { SET_CANTEEN_FEEDBACK_LABELS, SET_SELECTED_CANTEEN_FOOD_OFFERS } from '@/redux/Types/types';
+import { CanteensFeedbacksLabels, Foodoffers, FoodoffersMarkings } from '@/constants/types';
 import {
   Entypo,
   FontAwesome6,
@@ -43,11 +43,16 @@ import { excerpt } from '@/constants/HelperFunctions';
 import ForecastSheet from '@/components/ForecastSheet/ForecastSheet';
 import MenuSheet from '@/components/MenuSheet/MenuSheet';
 import ImageManagementSheet from '@/components/ImageManagementSheet/ImageManagementSheet';
+import EatingHabitsSheet from '@/components/EatingHabitsSheet/EatingHabitsSheet';
+import MarkingLabels from '@/components/MarkingLabels/MarkingLabels';
+import { CanteenFeedbackLabelHelper } from '@/redux/actions/CanteenFeedbacksLabel/CanteenFeedbacksLabel';
+import CanteenFeedbackLabels from '@/components/CanteenFeedbackLabels/CanteenFeedbackLabels';
 
 const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
   const dispatch = useDispatch();
   const { theme } = useTheme();
   const router = useRouter();
+  const canteenFeedbackLabelHelper = new CanteenFeedbackLabelHelper();
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<string>(
     new Date().toISOString().split('T')[0]
@@ -62,6 +67,7 @@ const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
   const forecastSheetRef = useRef<BottomSheet>(null);
   const menuSheetRef = useRef<BottomSheet>(null);
   const imageManagementSheetRef = useRef<BottomSheet>(null);
+  const eatingHabitSheetRef = useRef<BottomSheet>(null);
 
   const canteenPoints = useMemo(() => ['100%'], []);
   const sortPoints = useMemo(() => ['80%'], []);
@@ -70,11 +76,12 @@ const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
   const forecastPoints = useMemo(() => ['80%'], []);
   const menuPoints = useMemo(() => ['90%'], []);
   const imageManagementPoints = useMemo(() => ['70%'], []);
+  const eatingHabitPoints = useMemo(() => ['90%'], []);
 
   const drawerNavigation =
     useNavigation<DrawerNavigationProp<RootDrawerParamList>>();
 
-  const { selectedCanteen, selectedCanteenFoodOffers } = useSelector(
+  const { selectedCanteen, selectedCanteenFoodOffers, canteenFeedbackLabels } = useSelector(
     (state: any) => state.canteenReducer
   );
   useFocusEffect(
@@ -101,10 +108,15 @@ const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
   const closeCalendarSheet = () => {
     calendarSheetRef?.current?.close();
   };
+  const openEatingHabitSheet = () => {
+    eatingHabitSheetRef?.current?.expand();
+  };
+  const closeEatingHabitSheet = () => {
+    eatingHabitSheetRef?.current?.close();
+  };
   const openForecastSheet = () => {
     forecastSheetRef?.current?.expand();
   };
-
   const closeForecastSheet = () => {
     forecastSheetRef?.current?.close();
   };
@@ -176,11 +188,13 @@ const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
     return date; // Return the date if it's not Today, Yesterday, or Tomorrow
   };
 
-
   const fetchFoods = async () => {
     try {
       setLoading(true);
-      const foodData = await fetchFoodOffersByCanteen(selectedCanteen?.id, selected);
+      const foodData = await fetchFoodOffersByCanteen(
+        selectedCanteen?.id,
+        selected
+      );
       const foodOffers = foodData?.data || [];
       dispatch({ type: SET_SELECTED_CANTEEN_FOOD_OFFERS, payload: foodOffers });
       setLoading(false);
@@ -190,9 +204,26 @@ const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
     }
   };
 
+  const fetchCanteenLabels = async () => {
+    try {
+      // Fetch Canteen Feedback Labels
+      const canteenFeedbackLabels = await canteenFeedbackLabelHelper.fetchCanteenFeedbackLabels();
+      dispatch({
+        type: SET_CANTEEN_FEEDBACK_LABELS,
+        payload: canteenFeedbackLabels,
+      });
+    } catch (error) {
+      console.error('Error fetching Canteen Feedback Labels:', error);
+    }
+  }
+
   useEffect(() => {
     fetchFoods();
   }, [selectedCanteen, selected]);
+
+  useEffect(() => {
+    fetchCanteenLabels();
+  }, []);
 
   return (
     <View style={styles.foodOfferContainer}>
@@ -309,20 +340,43 @@ const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
             gap: isWeb ? 40 : 10,
           }}
         >
-          {loading ? <View style={{ width: '100%', height: 400, justifyContent: 'center' }}>
-            <ActivityIndicator size={'large'} color={theme.screen.icon} />
-          </View> : selectedCanteenFoodOffers &&
-          selectedCanteenFoodOffers.map((item: Foodoffers) => (
-            <FoodItem
-              item={item}
-              key={item.id}
-              handleMenuSheet={openMenuSheet}
-              handleImageSheet={openImageManagementSheet}
-              setSelectedFoodId={setSelectedFoodId}
-            />
-          ))}
+          {loading ? (
+            <View
+              style={{ width: '100%', height: 400, justifyContent: 'center' }}
+            >
+              <ActivityIndicator size={'large'} color={theme.screen.icon} />
+            </View>
+          ) : (
+            selectedCanteenFoodOffers &&
+            selectedCanteenFoodOffers.map((item: Foodoffers) => (
+              <FoodItem
+                item={item}
+                key={item.id}
+                handleMenuSheet={openMenuSheet}
+                handleImageSheet={openImageManagementSheet}
+                handleEatingHabitsSheet={openEatingHabitSheet}
+                setSelectedFoodId={setSelectedFoodId}
+              />
+            ))
+          )}
         </View>
+        {!loading && (
+          <View style={styles.feebackContainer}>
+            <View>
+              <Text style={{ ...styles.foodLabels, color: theme.screen.text }}>
+                Feedback Labels
+              </Text>
+            </View>
+            {
+              canteenFeedbackLabels?.map((label: CanteensFeedbacksLabels) => (
+                <CanteenFeedbackLabels key={label?.id} label={label} date={selected} />
+              ))
+            }
+          </View>
+        )
+        }
       </ScrollView>
+
       {isActive && (
         <BottomSheet
           ref={canteenSheetRef}
@@ -437,16 +491,29 @@ const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
           handleComponent={null}
           enableHandlePanningGesture={false}
           enableContentPanningGesture={false}
-          enablePanDownToClose={false}
-          enableDynamicSizing={false}
-          enableOverDrag={false}
-          aria-expanded={false}
         >
           <ImageManagementSheet
             closeSheet={closeImageManagementSheet}
             selectedFoodId={selectedFoodId}
             handleFetch={fetchFoods}
           />
+        </BottomSheet>
+      )}
+
+      {/* Eating Habits sheet */}
+
+      {isActive && (
+        <BottomSheet
+          ref={eatingHabitSheetRef}
+          index={-1}
+          snapPoints={eatingHabitPoints}
+          backgroundStyle={{
+            ...styles.sheetBackground,
+            backgroundColor: theme.sheet.sheetBg,
+          }}
+          handleComponent={null}
+        >
+          <EatingHabitsSheet closeSheet={closeEatingHabitSheet} />
         </BottomSheet>
       )}
     </View>

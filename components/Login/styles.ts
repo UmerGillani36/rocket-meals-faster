@@ -104,7 +104,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalView: {
-    width: 600,
     height: 450,
     borderRadius: 40,
     padding: 20,

@@ -12,7 +12,11 @@ const CustomStackHeader: React.FC<CustomStackHeaderProps> = ({ label }) => {
   const router = useRouter();
 
   const handleGoback = () => {
-    router.dismiss();
+    if (router.canDismiss()) {
+      router.dismiss();
+    } else {
+      router.navigate('/(app)/foodoffers');
+    }
   };
   return (
     <View

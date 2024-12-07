@@ -6,13 +6,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'expo-router';
 import { ProfileHelper } from '@/redux/actions/Profile/Profile';
 import { Profiles } from '@/constants/types';
-import { UPDATE_FOOD_FEEDBACK_LABELS, UPDATE_MARKINGS, UPDATE_OWN_FOOD_FEEDBACK, UPDATE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES, UPDATE_PROFILE } from '@/redux/Types/types';
+import { SET_OWN_CANTEEN_FEEDBACK_LABEL_ENTRIES, UPDATE_FOOD_FEEDBACK_LABELS, UPDATE_MARKINGS, UPDATE_OWN_FOOD_FEEDBACK, UPDATE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES, UPDATE_PROFILE } from '@/redux/Types/types';
 import { FoodFeedbackLabelHelper } from '@/redux/actions/FoodFeedbacksLabel/FoodFeedbacksLabel';
 import { FoodFeedbackHelper } from '@/redux/actions/FoodFeedbacks/FoodFeedbacks';
 import { FoodFeedbackLabelEntryHelper } from '@/redux/actions/FoodFeeedbackLabelEntries/FoodFeedbackLabelEntries';
 import { MarkingHelper } from '@/redux/actions/Markings/Markings';
 import { SafeAreaView } from 'react-native';
 import CustomMenuHeader from '@/components/CustomMenuHeader/CustomMenuHeader';
+import { CanteenFeedbackLabelEntryHelper } from '@/redux/actions/CanteenFeedbackLabelEntries/CanteenFeedbackLabelEntries';
 
 export default function Layout() {
   const { theme } = useTheme();
@@ -21,6 +22,7 @@ export default function Layout() {
   const foodFeedbackHelper = new FoodFeedbackHelper();
   const foodfeedbackLabelHelper = new FoodFeedbackLabelHelper();
   const foodFeedbackLabelEntryHelper = new FoodFeedbackLabelEntryHelper();
+  const canteenFeedbackLabelEntryHelper = new CanteenFeedbackLabelEntryHelper();
   const profileHelper = new ProfileHelper();
   const { loggedIn, user, profile } = useSelector(
     (state: any) => state.authReducer
@@ -91,6 +93,22 @@ export default function Layout() {
     }
   };
 
+  const getCanteenFeedbackEntries = async () => {
+    try {
+      const result = await canteenFeedbackLabelEntryHelper.fetchCanteenFeedbackLabelEntriesByProfile(
+        profile?.id
+      );
+      if (result) {
+        dispatch({
+          type: SET_OWN_CANTEEN_FEEDBACK_LABEL_ENTRIES,
+          payload: result,
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching feedback entries:', error);
+    }
+  }
+
   const getMarkings = async () => {
     try {
       const result = await markingHelper.fetchMarkings({});
@@ -106,6 +124,7 @@ export default function Layout() {
     if (profile?.id) {
       getOwnFeedback();
       getFeedbackEntries();
+      getCanteenFeedbackEntries();
     }
   }, [profile]);
 
@@ -149,7 +168,7 @@ export default function Layout() {
           }}
         />
         <Drawer.Screen
-          name='campus/index'
+          name='campus'
           options={{
             title: 'Campus',
             headerShown: false,

@@ -11,11 +11,9 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
-    // borderWidth: 2,
-    // borderColor: "#000000",
   },
   webTitleContainer: {
-    width: '50%',
+    width: '100%',
     alignItems: 'center',
   },
   title: {

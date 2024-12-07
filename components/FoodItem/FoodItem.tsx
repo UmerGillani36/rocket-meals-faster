@@ -12,11 +12,12 @@ import {
   showPrice,
 } from '@/constants/HelperFunctions';
 import { getTextFromTranslation } from '@/helper/resourceHelper';
-import { Foods } from '@/constants/types';
+import { Foods, FoodsFeedbacks, ProfilesMarkings } from '@/constants/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { FoodFeedbackHelper } from '@/redux/actions/FoodFeedbacks/FoodFeedbacks';
 import {
   DELETE_FOOD_FEEDBACK_LOCAL,
+  SET_SELECTED_FOOD_MARKINGS,
   UPDATE_FOOD_FEEDBACK_LOCAL,
 } from '@/redux/Types/types';
 import PermissionModal from '../PermissionModal/PermissionModal';
@@ -27,6 +28,8 @@ const FoodItem: React.FC<FoodItemProps> = ({
   handleMenuSheet,
   handleImageSheet,
   setSelectedFoodId,
+  handleEatingHabitsSheet,
+  // setItemMarkings,
 }) => {
   const foodFeedbackHelper = new FoodFeedbackHelper();
   const [warning, setWarning] = useState(false);
@@ -47,17 +50,31 @@ const FoodItem: React.FC<FoodItemProps> = ({
     });
   };
 
+  const handleOpenSheet = () => {
+    dispatch({
+      type: SET_SELECTED_FOOD_MARKINGS,
+      payload: dislikedMarkings,
+    })
+    handleEatingHabitsSheet();
+  };
+
+  const dislikedMarkings = item?.markings.filter((marking) => {
+    return profile?.markings?.some((profileMarking: ProfilesMarkings) =>
+      profileMarking?.markings_id === marking?.markings_id && profileMarking?.like === false
+    );
+  });
+
   const updateRating = async (rating: number | null) => {
     if (!user?.id) {
       setWarning(true);
       return;
     }
     try {
-      const updateFeedbackResult = await foodFeedbackHelper.updateFoodFeedback(
+      const updateFeedbackResult = (await foodFeedbackHelper.updateFoodFeedback(
         foodItem?.id,
         profile?.id,
         { ...previousFeedback, rating }
-      );
+      )) as FoodsFeedbacks;
       if (updateFeedbackResult?.id) {
         dispatch({
           type: UPDATE_FOOD_FEEDBACK_LOCAL,
@@ -82,6 +99,8 @@ const FoodItem: React.FC<FoodItemProps> = ({
           width: isWeb ? 250 : '48%',
           height: isWeb ? 300 : 250,
           backgroundColor: theme.card.background,
+          borderWidth: dislikedMarkings.length > 0 ? 1 : 0,
+          borderColor: '#FF000095',
         }}
         key={item?.alias}
         onPress={() => {
@@ -97,11 +116,15 @@ const FoodItem: React.FC<FoodItemProps> = ({
           }}
         >
           <Image
-            style={styles.image}
+            style={{
+              ...styles.image,
+              borderColor: theme.primary,
+            }}
             source={{
               uri:
-                foodItem?.image_remote_url || getImageUrl(foodItem?.image),
+                foodItem?.image_remote_url || getImageUrl(foodItem?.image) || '',
             }}
+
           // contentFit='cover'
           // cachePolicy={'memory-disk'}
           // transition={500}
@@ -134,6 +157,17 @@ const FoodItem: React.FC<FoodItemProps> = ({
               </TouchableOpacity>
             )}
           </TouchableOpacity>
+          {
+            dislikedMarkings.length > 0 &&
+            <TouchableOpacity style={styles.favContainerWarn}
+              onPress={handleOpenSheet}>
+              <MaterialCommunityIcons
+                name='medical-bag'
+                size={20}
+                color={'#000'}
+              />
+            </TouchableOpacity>
+          }
           <View style={styles.categoriesContainer}>
             <TouchableOpacity onPress={handleMenuSheet}>
               <Image
