@@ -33,7 +33,13 @@ const FeedbackLabel: React.FC<FeedbackLabelProps> = ({
 
   // Use useMemo to optimize the filtering process
   const labelData = useMemo(() => {
-    return labelEntries.find((entry: FoodsFeedbacksLabelsEntries) => entry.label === label[0]?.foods_feedbacks_labels_id && entry.food === foodId) || {} as FoodsFeedbacksLabelsEntries;
+    return (
+      labelEntries?.find(
+        (entry: FoodsFeedbacksLabelsEntries) =>
+          entry.label === label[0]?.foods_feedbacks_labels_id &&
+          entry.food === foodId
+      ) || ({} as FoodsFeedbacksLabelsEntries)
+    );
   }, [label, labelEntries]);
 
   // Function to handle updating the entry

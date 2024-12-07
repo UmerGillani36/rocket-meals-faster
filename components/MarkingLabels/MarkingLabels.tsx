@@ -24,7 +24,7 @@ const MarkingLabels: React.FC<MarkingLabelProps> = ({ markingId }) => {
   // Destructure and memoize selectors
   const { user, profile } = useSelector((state: any) => state.authReducer);
   const { markings } = useSelector((state: any) => state.food);
-  const marking = markings.find((mark: any) => mark.id === markingId);
+  const marking = markings?.find((mark: any) => mark.id === markingId);
   const ownMarking = profile?.markings?.find((mark: any) => mark.markings_id === markingId);
 
   // Fetch profile function

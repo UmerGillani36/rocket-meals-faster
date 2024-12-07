@@ -67,7 +67,9 @@ async fetchCanteenFeedbackLabelEntries(queryOverride: any = {}, date: string, ca
 
     // Check for existing entry
     // let existingEntry = foodFeedbackLabelEntries.find(x => x.label === canteenFeedbackLabelId && x.food === foodId);
-    let existingEntry = canteenFeedbackLabelEntries.find(x => x.label === canteenFeedbackLabelId);
+    let existingEntry = canteenFeedbackLabelEntries?.find(
+      (x) => x.label === canteenFeedbackLabelId
+    );
     let isNewEntry = !existingEntry;
 
     // Prepare new entry data
