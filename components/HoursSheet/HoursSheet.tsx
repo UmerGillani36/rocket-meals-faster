@@ -13,10 +13,7 @@ const HourSheet: React.FC<HoursSheetProps> = ({ closeSheet }) => {
   const { selectedCanteen, businessHours } = useSelector((state: any) => state.canteenReducer);
 
   // Fetch the business hour data for the selected canteen
-  const businessHour = businessHours?.find(
-    (hour: any) =>
-      hour.id === selectedCanteen.foodservice_hours[0]?.businesshours_id
-  );
+  const businessHour = businessHours.find((hour: any) => hour.id === selectedCanteen.foodservice_hours[0]?.businesshours_id);
 
   // If businessHour is not available, return an empty or default view.
   if (!businessHour) {

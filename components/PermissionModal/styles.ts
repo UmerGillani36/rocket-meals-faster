@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
 
-export default StyleSheet.create({
+export const styles = StyleSheet.create({
+
   modalContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalView: {
-    height: 350,
+    height: "auto",
     borderRadius: 40,
     padding: 20,
     alignItems: 'center',
@@ -23,27 +24,31 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   modalHeading: {
+    fontSize: 36,
     fontFamily: 'Poppins_700Bold',
   },
   modalSubHeading: {
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: 'Poppins_400Regular',
     marginTop: 10,
     marginBottom: 10,
     textAlign: 'center',
+
   },
+
   loginButton: {
-    width: '90%',
-    height: 50,
+    width: '80%',
+    height: 60,
     backgroundColor: '#FCDE31',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,
-    marginTop: 40,
+    marginTop: 20,
   },
   loginLabel: {
     fontFamily: 'Poppins_700Bold',
-    fontSize: 14,
+    fontSize: 18,
     color: '#2E2E2E',
   },
+
 });

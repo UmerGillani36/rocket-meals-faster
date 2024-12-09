@@ -8,6 +8,7 @@ import {
     SET_OWN_CANTEEN_FEEDBACK_LABEL_ENTRIES,
     SET_SELECTED_CANTEEN,
     SET_SELECTED_CANTEEN_FOOD_OFFERS,
+    SET_SELECTED_CANTEEN_FOOD_OFFERS_LOCAL,
     UPDATE_OWN_CANTEEN_FEEDBACK_LABEL_ENTRIES,
   } from '@/redux/Types/types';
   
@@ -17,6 +18,7 @@ import {
     selectedCanteen: null,
     foodOffers: [],
     selectedCanteenFoodOffers: [],
+    canteenFoodOffers: [],
     businessHours: [],
     canteenFeedbackLabels: [],
     ownCanteenFeedBackLabelEntries: [],
@@ -52,6 +54,12 @@ import {
         return {
           ...state,
           selectedCanteenFoodOffers: actions.payload,
+        };
+      }
+      case SET_SELECTED_CANTEEN_FOOD_OFFERS_LOCAL: {
+        return {
+          ...state,
+          canteenFoodOffers: actions.payload,
         };
       }
       case SET_BUSINESS_HOURS: {

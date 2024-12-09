@@ -104,7 +104,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalView: {
-    height: 450,
+    // height: 450,
     borderRadius: 40,
     padding: 20,
     alignItems: 'center',
@@ -114,13 +114,14 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   closeButton: {
-    width: 50,
-    height: 50,
+    // width: 50,
+    // height: 50,
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalHeading: {
+    marginTop:10,
     fontSize: 36,
     fontFamily: 'Poppins_700Bold',
   },

@@ -70,6 +70,13 @@ const ManagementModal: React.FC<ManagementModalProps> = ({
     };
   }, []);
 
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
+
+  useEffect(() => {
+    const screenHeight = Dimensions.get('window').height;
+    setIsLargeScreen(screenHeight > 500); // Detect if screen height is greater than 500px
+  }, []);
+
   return (
     <Modal
       isVisible={isVisible}
@@ -79,6 +86,7 @@ const ManagementModal: React.FC<ManagementModalProps> = ({
       <View
         style={{
           ...styles.modalView,
+          height: isLargeScreen ? 430 : 450,
           backgroundColor: theme.modal.modalBg,
           width: modalWidth,
         }}
@@ -87,11 +95,18 @@ const ManagementModal: React.FC<ManagementModalProps> = ({
           <TouchableOpacity
             style={{
               ...styles.closeButton,
+
               backgroundColor: theme.modal.closeBg,
+              height: isLargeScreen ? 42 : 50,
+              width: isLargeScreen ? 42 : 50,
             }}
             onPress={() => setIsVisible(false)}
           >
-            <AntDesign name='close' size={28} color={theme.modal.closeIcon} />
+            <AntDesign
+              name='close'
+              size={isLargeScreen ? 22 : 28}
+              color={theme.modal.closeIcon}
+            />
           </TouchableOpacity>
         </View>
         <Text

@@ -1,5 +1,5 @@
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import React, { useEffect } from 'react';
+import { Dimensions, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './styles';
 import { useTheme } from '@/hooks/useTheme';
@@ -19,6 +19,7 @@ import { Image } from 'expo-image';
 import { Buildings, Canteens } from '@/constants/types';
 import { BusinessHoursHelper } from '@/redux/actions/BusinessHours/BusinessHours';
 
+
 const Home = () => {
   const dispatch = useDispatch();
   const businessHoursHelper = new BusinessHoursHelper();
@@ -27,6 +28,8 @@ const Home = () => {
   const router = useRouter();
   const { theme } = useTheme();
   const { canteens, selectedCanteen } = useSelector((state: any) => state.canteenReducer);
+
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
 
   const checkCanteenSelection = () => {
     if (selectedCanteen) {
@@ -41,27 +44,23 @@ const Home = () => {
 
   const getCanteensWithBuildings = async () => {
     try {
-      // Fetch buildings
       const buildingsData = (await buildingsHelper.fetchBuildings({})) as Buildings[];
       const buildings = buildingsData || [];
       const buildingsDict = buildings.reduce(
         (acc: Record<string, any>, building: any) => {
-          acc[building.id] = building; // Assuming buildings have a unique 'id'
+          acc[building.id] = building;
           return acc;
         },
         {}
       );
 
-      // Dispatch buildings
       dispatch({ type: SET_BUILDINGS, payload: buildings });
 
-      // Fetch canteens
       const canteensData = (await canteenHelper.fetchCanteens({})) as Canteens[];
       const canteens = canteensData || [];
 
-      // Process canteens with building data
       const updatedCanteens = canteens.map((canteen: any) => {
-        const building = buildingsDict[canteen?.building as string]; // Match building by ID
+        const building = buildingsDict[canteen?.building as string];
         return {
           ...canteen,
           imageAssetId: building?.image,
@@ -70,7 +69,6 @@ const Home = () => {
         };
       });
 
-      // Dispatch updated canteens
       dispatch({ type: SET_CANTEENS, payload: updatedCanteens });
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -84,7 +82,7 @@ const Home = () => {
     } catch (error) {
       console.error('Error fetching business hours:', error);
     }
-  }
+  };
 
   useEffect(() => {
     checkCanteenSelection();
@@ -92,6 +90,32 @@ const Home = () => {
     getCanteensWithBuildings();
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(Dimensions.get('window').width);
+    };
+
+    const subscription = Dimensions.addEventListener('change', handleResize);
+
+    return () => subscription?.remove();
+
+  }, []);
+
+  // Determine the card width for small screens
+  const cardWidth = screenWidth > 768 ? '15%' : screenWidth > 480 ? '45%' : '45%';
+  const cardHeight = screenWidth > 768 ? '15%' : screenWidth > 480 ? '45%' : '45%';
+  const iscenter = screenWidth > 768 ? 'flex-start' : screenWidth > 480 ? 'center' : 'center';
+  const marginLeft = screenWidth > 768 ? 10 : screenWidth > 480 ? 0 : 0;
+  const calculateRatio = () => {
+    const screenWidth = Dimensions.get('window').width;
+    const cardWidth = screenWidth > 768
+      ? screenWidth * 0.15 // 15% of the screen width for large screens
+      : screenWidth > 480
+        ? screenWidth * 0.45 // 45% for medium screens
+        : screenWidth * 0.45; // 45% for smaller screens
+    console.log(cardWidth - 30)
+    return cardWidth - 30; // Subtract 30 for padding/margin adjustments
+  };
   return (
     <ScrollView
       style={{
@@ -102,21 +126,23 @@ const Home = () => {
       <View
         style={{
           ...styles.canteensContainer,
-          gap: isWeb ? 20 : 10,
-          marginLeft: isWeb ? 20 : 0,
-          padding: isWeb ? 20 : 10,
-          paddingBottom: 0,
-          marginBottom: 10,
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: iscenter,
+          gap: 10,
+          marginLeft: marginLeft
+          // margin: 10,
         }}
       >
         {canteens &&
-          canteens?.map((canteen: CanteenProps, index: number) => (
+          canteens.map((canteen: CanteenProps, index: number) => (
             <TouchableOpacity
               style={{
                 ...styles.card,
-                width: isWeb ? 250 : '48%',
-                height: isWeb ? 200 : 200,
+                width: calculateRatio(),
+                height: 210,
                 backgroundColor: theme.card.background,
+                marginBottom: 10,
               }}
               key={canteen.alias}
               onPress={() => {
@@ -127,11 +153,12 @@ const Home = () => {
                 <Image
                   style={styles.image}
                   source={canteen?.image_url}
-                  contentFit='cover'
+                  contentFit="cover"
                   placeholder={!canteen?.image_url && { blurhash }}
                   cachePolicy={'memory-disk'}
                   transition={500}
                 />
+
               </View>
               <Text style={{ ...styles.canteenName, color: theme.card.text }}>
                 {excerpt(String(canteen.alias), 12)}

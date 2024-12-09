@@ -1,5 +1,5 @@
-import React from "react";
-import { View, ScrollView, Text } from 'react-native';
+import React from 'react';
+import { View, ScrollView, Text, Dimensions } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 import styles from './styles';
 import {
@@ -14,8 +14,12 @@ import {
 import { isWeb } from '@/constants/Constants';
 import SettingList from '@/components/SettingList/SettingList';
 
+const { width: windowWidth } = Dimensions.get('window');
+
 const Settings = () => {
   const { theme } = useTheme();
+
+  const containerWidth = windowWidth < 500 ? '100%' : isWeb ? '80%' : '100%';
 
   return (
     <ScrollView
@@ -25,9 +29,7 @@ const Settings = () => {
         backgroundColor: theme.screen.background,
       }}
     >
-      <View
-        style={{ ...styles.settingContainer, width: isWeb ? '80%' : '100%' }}
-      >
+      <View style={{ ...styles.settingContainer, width: containerWidth }}>
         {/* Account */}
         <View
           style={{
@@ -75,7 +77,7 @@ const Settings = () => {
               color={theme.screen.icon}
             />
           }
-          handleFunction={() => {}}
+          handleFunction={() => { }}
         />
         {/* Language */}
 
@@ -92,7 +94,7 @@ const Settings = () => {
               color={theme.screen.icon}
             />
           }
-          handleFunction={() => {}}
+          handleFunction={() => { }}
         />
         {/* Canteen */}
         <SettingList
@@ -112,7 +114,7 @@ const Settings = () => {
               color={theme.screen.icon}
             />
           }
-          handleFunction={() => {}}
+          handleFunction={() => { }}
         />
         <SettingList
           leftIcon={
@@ -130,7 +132,7 @@ const Settings = () => {
               color={theme.screen.icon}
             />
           }
-          handleFunction={() => {}}
+          handleFunction={() => { }}
         />
         <SettingList
           leftIcon={
@@ -145,7 +147,7 @@ const Settings = () => {
               color={theme.screen.icon}
             />
           }
-          handleFunction={() => {}}
+          handleFunction={() => { }}
         />
         <SettingList
           leftIcon={
@@ -160,7 +162,7 @@ const Settings = () => {
               color={theme.screen.icon}
             />
           }
-          handleFunction={() => {}}
+          handleFunction={() => { }}
         />
         <SettingList
           leftIcon={
@@ -178,7 +180,7 @@ const Settings = () => {
               color={theme.screen.icon}
             />
           }
-          handleFunction={() => {}}
+          handleFunction={() => { }}
         />
         <SettingList
           leftIcon={
@@ -197,7 +199,7 @@ const Settings = () => {
               color={theme.screen.icon}
             />
           }
-          handleFunction={() => {}}
+          handleFunction={() => { }}
         />
         <SettingList
           leftIcon={<Entypo name='menu' size={24} color={theme.screen.icon} />}
@@ -210,9 +212,9 @@ const Settings = () => {
               color={theme.screen.icon}
             />
           }
-          handleFunction={() => {}}
+          handleFunction={() => { }}
         />
-        <SettingList
+        {/* <SettingList
           leftIcon={
             <FontAwesome5 name='columns' size={24} color={theme.screen.icon} />
           }
@@ -226,7 +228,7 @@ const Settings = () => {
             />
           }
           handleFunction={() => {}}
-        />
+        /> */}
         <SettingList
           leftIcon={
             <Feather name='calendar' size={24} color={theme.screen.icon} />
@@ -240,7 +242,7 @@ const Settings = () => {
               color={theme.screen.icon}
             />
           }
-          handleFunction={() => {}}
+          handleFunction={() => { }}
         />
         <SettingList
           leftIcon={<Entypo name='login' size={24} color={theme.screen.icon} />}
@@ -248,7 +250,7 @@ const Settings = () => {
           rightIcon={
             <Entypo name='login' size={24} color={theme.screen.icon} />
           }
-          handleFunction={() => {}}
+          handleFunction={() => { }}
         />
         <SettingList
           leftIcon={
@@ -266,7 +268,7 @@ const Settings = () => {
               color={theme.screen.icon}
             />
           }
-          handleFunction={() => {}}
+          handleFunction={() => { }}
         />
         <SettingList
           leftIcon={
@@ -284,7 +286,7 @@ const Settings = () => {
               color={theme.screen.icon}
             />
           }
-          handleFunction={() => {}}
+          handleFunction={() => { }}
         />
         <SettingList
           leftIcon={
@@ -302,7 +304,7 @@ const Settings = () => {
               color={theme.screen.icon}
             />
           }
-          handleFunction={() => {}}
+          handleFunction={() => { }}
         />
         {/* Terms & Conditions */}
         <View

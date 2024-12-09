@@ -202,9 +202,7 @@ export class FoodFeedbackLabelEntryHelper extends CollectionHelper<any> {
     let foodFeedbackLabelEntries = foodFeedbackLabelEntriesData ?? [];
 
     // Check for existing entry
-    let existingEntry = foodFeedbackLabelEntries?.find(
-      (x) => x.label === foodFeedbackLabelId && x.food === foodId
-    );
+    let existingEntry = foodFeedbackLabelEntries.find(x => x.label === foodFeedbackLabelId && x.food === foodId);
     let isNewEntry = !existingEntry;
 
     // Prepare new entry data

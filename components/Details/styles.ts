@@ -19,18 +19,28 @@ export default StyleSheet.create({
   nutritionsContainer: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     alignItems: 'flex-start',
     flexWrap: 'wrap',
     marginVertical: 20,
-    gap: 10,
+    gap: 40,
   },
   nutrition: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 5,
+    width: 100, 
+    height: 60, 
+    justifyContent: 'flex-start', 
+    alignContent: 'flex-start', 
+   
   },
-  averageNutrition: {},
+  averageNutrition: {   
+    width: 100, 
+    height: 60, 
+    // backgroundColor:"red"
+   
+    },
   label: {
     fontSize: 14,
     fontFamily: 'Poppins_400Regular',

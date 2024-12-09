@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
-import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-native-modal';
-import { PermissionModalProps } from './types';
-import { useTheme } from '@/hooks/useTheme';
+import { styles } from './styles';
+import { useTheme } from '@/context/ThemeContext';
 import { AntDesign } from '@expo/vector-icons';
-import styles from './styles';
-import { isWeb } from '@/constants/Constants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ON_LOGOUT } from '@/redux/Types/types';
+import { PermissionModalProps } from './types';
 import { useRouter } from 'expo-router';
 import { useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ON_LOGOUT } from '@/redux/Types/types';
 
 const PermissionModal: React.FC<PermissionModalProps> = ({
   isVisible,
@@ -20,6 +25,30 @@ const PermissionModal: React.FC<PermissionModalProps> = ({
   const router = useRouter();
   const dispatch = useDispatch();
 
+  const getModalWidth = (windowWidth: number) => {
+    if (windowWidth < 800) return '100%';
+    if (windowWidth >= 800 && windowWidth <= 1200) return 700;
+    return 600;
+  };
+
+  const [modalWidth, setModalWidth] = useState(() => {
+    const windowWidth = Dimensions.get('window').width;
+    return getModalWidth(windowWidth);
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      const windowWidth = Dimensions.get('window').width;
+
+      setModalWidth(getModalWidth(windowWidth));
+    };
+
+    const subscription = Dimensions.addEventListener('change', handleResize);
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
   const handleLogout = async () => {
     try {
       setLoading(true);
@@ -34,12 +63,16 @@ const PermissionModal: React.FC<PermissionModalProps> = ({
   };
 
   return (
-    <Modal isVisible={isVisible} style={styles.modalContainer}>
+    <Modal
+      isVisible={isVisible}
+      style={styles.modalContainer}
+      onBackdropPress={() => setIsVisible(false)}
+    >
       <View
         style={{
           ...styles.modalView,
-          width: isWeb ? 550 : '100%',
           backgroundColor: theme.modal.modalBg,
+          width: modalWidth,
         }}
       >
         <View style={styles.modalHeader}>
@@ -56,8 +89,8 @@ const PermissionModal: React.FC<PermissionModalProps> = ({
         <Text
           style={{
             ...styles.modalHeading,
-            fontSize: isWeb ? 36 : 26,
             color: theme.modal.text,
+            fontSize: Dimensions.get('window').width < 500 ? 26 : 36,
           }}
         >
           Access Limited
@@ -65,24 +98,29 @@ const PermissionModal: React.FC<PermissionModalProps> = ({
         <Text
           style={{
             ...styles.modalSubHeading,
-            width: isWeb ? '90%' : '100%',
             color: theme.modal.text,
-            fontSize: isWeb ? 16 : 14,
+            fontSize: Dimensions.get('window').width < 500 ? 16 : 18,
           }}
         >
           To enjoy a personalized experience, please log in or create an
           account. Alternatively, you can continue as a guest with limited
           features.
         </Text>
-
         <TouchableOpacity
           style={{
             ...styles.loginButton,
-            backgroundColor: theme.primary,
+
+            width: Dimensions.get('window').width < 500 ? '100%' : '80%',
           }}
           onPress={handleLogout}
         >
-          {loading ? <ActivityIndicator size={22} color={theme.background} /> : <Text style={{ ...styles.loginLabel }}>Sign In / Create Account</Text>}
+          {loading ? (
+            <ActivityIndicator size={22} color={theme.background} />
+          ) : (
+            <Text style={{ ...styles.loginLabel }}>
+              Sign In / Create Account
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </Modal>

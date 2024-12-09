@@ -35,7 +35,7 @@ const ForecastSheet: React.FC<ForecastSheetProps> = ({ closeSheet }) => {
     }
 
     const chartData = intervals.map((label) => {
-      const matchingData = data?.find((entry: any) => {
+      const matchingData = data.find((entry: any) => {
         const start = format(parseISO(entry.date_start), 'H:mm');
         return start === label;
       });

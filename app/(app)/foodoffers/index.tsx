@@ -19,12 +19,12 @@ import {
   DrawerContentComponentProps,
   DrawerNavigationProp,
 } from '@react-navigation/drawer';
-import { isWeb } from '@/constants/Constants';
+import { isWeb, languageCode } from '@/constants/Constants';
 import FoodItem from '@/components/FoodItem/FoodItem';
 import { useFocusEffect, useNavigation, useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchFoodOffersByCanteen } from '@/redux/actions/FoodOffers/FoodOffers';
-import { SET_CANTEEN_FEEDBACK_LABELS, SET_SELECTED_CANTEEN_FOOD_OFFERS } from '@/redux/Types/types';
+import { SET_CANTEEN_FEEDBACK_LABELS, SET_SELECTED_CANTEEN_FOOD_OFFERS, SET_SELECTED_CANTEEN_FOOD_OFFERS_LOCAL } from '@/redux/Types/types';
 import { CanteensFeedbacksLabels, Foodoffers, FoodoffersMarkings } from '@/constants/types';
 import {
   Entypo,
@@ -47,6 +47,7 @@ import EatingHabitsSheet from '@/components/EatingHabitsSheet/EatingHabitsSheet'
 import MarkingLabels from '@/components/MarkingLabels/MarkingLabels';
 import { CanteenFeedbackLabelHelper } from '@/redux/actions/CanteenFeedbacksLabel/CanteenFeedbacksLabel';
 import CanteenFeedbackLabels from '@/components/CanteenFeedbackLabels/CanteenFeedbackLabels';
+import { intelligentSort, sortByEatingHabits, sortByFoodName, sortByOwnFavorite, sortByPublicFavorite } from '@/helper/sortingHelper';
 
 const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -71,7 +72,7 @@ const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
 
   const canteenPoints = useMemo(() => ['100%'], []);
   const sortPoints = useMemo(() => ['80%'], []);
-  const hoursPoints = useMemo(() => ['60%'], []);
+  const hoursPoints = useMemo(() => ['80%'], []);
   const calendarPoints = useMemo(() => ['80%'], []);
   const forecastPoints = useMemo(() => ['80%'], []);
   const menuPoints = useMemo(() => ['90%'], []);
@@ -81,7 +82,10 @@ const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
   const drawerNavigation =
     useNavigation<DrawerNavigationProp<RootDrawerParamList>>();
 
-  const { selectedCanteen, selectedCanteenFoodOffers, canteenFeedbackLabels } = useSelector(
+  const { sortBy } = useSelector((state: any) => state.settings);
+  const { ownFoodFeedbacks } = useSelector((state: any) => state.food);
+  const { profile } = useSelector((state: any) => state.authReducer);
+  const { selectedCanteen, selectedCanteenFoodOffers, canteenFeedbackLabels, canteenFoodOffers } = useSelector(
     (state: any) => state.canteenReducer
   );
   useFocusEffect(
@@ -188,6 +192,42 @@ const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
     return date; // Return the date if it's not Today, Yesterday, or Tomorrow
   };
 
+  const updateSort = (id: string) => {
+
+    // Copy food offers to avoid mutation
+    let copiedFoodOffers = [...canteenFoodOffers];
+
+    // Sorting logic based on option id
+    switch (id) {
+      case 'alphabetical':
+        copiedFoodOffers = sortByFoodName(copiedFoodOffers, languageCode);
+        break;
+      case 'favorite':
+        copiedFoodOffers = sortByOwnFavorite(copiedFoodOffers, ownFoodFeedbacks);
+        break;
+      case 'eating':
+        copiedFoodOffers = sortByEatingHabits(copiedFoodOffers, profile.markings);
+        break;
+      case 'rating':
+        copiedFoodOffers = sortByPublicFavorite(copiedFoodOffers);
+        break;
+      case 'intelligent':
+        copiedFoodOffers = intelligentSort(
+          copiedFoodOffers,
+          ownFoodFeedbacks,
+          profile.markings,
+          languageCode
+        );
+        break;
+      default:
+        console.warn('Unknown sorting option:', id);
+        break;
+    }
+
+    // Dispatch updated food offers and close the sheet
+    dispatch({ type: SET_SELECTED_CANTEEN_FOOD_OFFERS, payload: copiedFoodOffers });
+  };
+
   const fetchFoods = async () => {
     try {
       setLoading(true);
@@ -196,7 +236,10 @@ const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
         selected
       );
       const foodOffers = foodData?.data || [];
-      dispatch({ type: SET_SELECTED_CANTEEN_FOOD_OFFERS, payload: foodOffers });
+
+      updateSort(sortBy);
+
+      dispatch({ type: SET_SELECTED_CANTEEN_FOOD_OFFERS_LOCAL, payload: foodOffers });
       setLoading(false);
     } catch (error) {
       setLoading(false);

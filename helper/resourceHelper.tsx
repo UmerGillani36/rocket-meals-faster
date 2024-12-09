@@ -35,9 +35,7 @@ interface Translation {
 
 const getTextFromTranslation = (translations: Array<Translation>): string => {
     if (!translations || translations.length === 0) return '';
-    const translation = translations?.find(
-      (t) => t.languages_code === languageCode
-    );
+    const translation = translations.find((t) => t.languages_code === languageCode);
     return translation?.text || translation?.name || '';
 };
 

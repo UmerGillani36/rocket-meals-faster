@@ -12,10 +12,9 @@ export class UrlHelper {
       const urlWithoutBaseUrl = createURL(path); // createUrl creates a url but without the base url which seems to be a bug
       // example: path = "/login"
       // example: urlWithoutBaseUrl = "https://localhost:3000/login"
-      const urlWithoutPath = urlWithoutBaseUrl.replace(path, ''); // remove the path from the url
+      const urlWithoutPath = urlWithoutBaseUrl.replace(path, ""); // remove the path from the url
       // example: urlWithoutPath = "https://localhost:3000"
-      const baseUrl = '/rocket-meals';
-      // const baseUrl = EnvHelper.getBaseUrl();
+      const baseUrl = EnvHelper.getBaseUrl();
       // example: baseUrl = "/rocket-meals"
       const url = urlWithoutPath + baseUrl + path;
       // example: url = "https://localhost:3000/rocket-meals/login"

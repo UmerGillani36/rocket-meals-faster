@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Dimensions,
   Platform,
   Text,
   TextInput,
@@ -21,7 +22,10 @@ import { Foods } from '@/constants/types';
 import { FoodFeedbackHelper } from '@/redux/actions/FoodFeedbacks/FoodFeedbacks';
 import useToast from '@/hooks/useToast';
 import { DateHelper } from '@/helper/dateHelper';
-import { DELETE_FOOD_FEEDBACK_LOCAL, UPDATE_FOOD_FEEDBACK_LOCAL } from '@/redux/Types/types';
+import {
+  DELETE_FOOD_FEEDBACK_LOCAL,
+  UPDATE_FOOD_FEEDBACK_LOCAL,
+} from '@/redux/Types/types';
 import PermissionModal from '../PermissionModal/PermissionModal';
 
 interface FeedbacksProps {
@@ -32,7 +36,7 @@ interface FeedbacksProps {
 const loadingState = {
   submitLoading: false,
   deleteLoading: false,
-}
+};
 
 const Feedbacks: React.FC<FeedbacksProps> = ({ foodDetails, offerId }) => {
   const toast = useToast();
@@ -43,12 +47,14 @@ const Feedbacks: React.FC<FeedbacksProps> = ({ foodDetails, offerId }) => {
   const [comment, setComment] = useState('');
   const foodFeedbackHelper = new FoodFeedbackHelper();
   const { user, profile } = useSelector((state: any) => state.authReducer);
-  const { foodFeedbackLabels: labels, ownfoodFeedbackLabelEntries: labelEntries } = useSelector((state: any) => state.food);
+  const {
+    foodFeedbackLabels: labels,
+    ownfoodFeedbackLabelEntries: labelEntries,
+  } = useSelector((state: any) => state.food);
   const previousFeedback = useSelector((state: any) =>
     getpreviousFeedback(state.food.ownFoodFeedbacks, foodDetails?.id)
   );
   const submitCommentFeedback = async (string: string | null) => {
-
     if (!user?.id) {
       setWarning(true);
       return;
@@ -60,17 +66,23 @@ const Feedbacks: React.FC<FeedbacksProps> = ({ foodDetails, offerId }) => {
     }
 
     // Set loading state based on whether string is null or not
-    setLoading(prev => ({
+    setLoading((prev) => ({
       ...prev,
       [string === null ? 'deleteLoading' : 'submitLoading']: true,
     }));
 
     try {
-      const result: any = await foodFeedbackHelper.updateFoodFeedback(foodDetails?.id, profile?.id, { ...previousFeedback, comment: string })
+      const result: any = await foodFeedbackHelper.updateFoodFeedback(
+        foodDetails?.id,
+        profile?.id,
+        { ...previousFeedback, comment: string }
+      );
       // Dispatch the correct action
       dispatch({
-        type: result?.id ? UPDATE_FOOD_FEEDBACK_LOCAL : DELETE_FOOD_FEEDBACK_LOCAL,
-        payload: result?.id ? result : previousFeedback.id
+        type: result?.id
+          ? UPDATE_FOOD_FEEDBACK_LOCAL
+          : DELETE_FOOD_FEEDBACK_LOCAL,
+        payload: result?.id ? result : previousFeedback.id,
       });
 
       // Clear comment and reset loading state
@@ -82,12 +94,13 @@ const Feedbacks: React.FC<FeedbacksProps> = ({ foodDetails, offerId }) => {
     }
   };
 
-
   useEffect(() => {
     if (previousFeedback.comment) {
       setComment(previousFeedback.comment);
     }
   }, [previousFeedback]);
+
+  const resp = Dimensions.get('window').width > 800;
 
   return (
     <View style={styles.container}>
@@ -198,7 +211,11 @@ const Feedbacks: React.FC<FeedbacksProps> = ({ foodDetails, offerId }) => {
               }}
               onPress={() => submitCommentFeedback(null)}
             >
-              {loading.deleteLoading ? <ActivityIndicator color={theme.primary} size={20} /> : <MaterialIcons name='delete-outline' size={24} color={'red'} />}
+              {loading.deleteLoading ? (
+                <ActivityIndicator color={theme.primary} size={20} />
+              ) : (
+                <MaterialIcons name='delete-outline' size={24} color={'red'} />
+              )}
             </TouchableOpacity>
           </View>
           <View style={styles.comment}>
@@ -216,18 +233,19 @@ const Feedbacks: React.FC<FeedbacksProps> = ({ foodDetails, offerId }) => {
           <View style={styles.divider} />
         </View>
       )}
+
       <View
         style={{
           ...styles.searchContainer,
-          flexDirection: isWeb ? 'row' : 'column',
-          borderRadius: isWeb ? 50 : 8,
+          flexDirection: resp ? 'row' : 'column',
+          borderRadius: resp ? 50 : 8,
           gap: 20,
         }}
       >
         <TextInput
           style={[
             styles.input,
-            { width: isWeb ? '70%' : '100%' },
+            { width: resp ? '70%' : '100%' },
             Platform.OS === 'web' && ({ outlineStyle: 'none' } as any),
           ]}
           cursorColor={theme.modal.text}
@@ -239,13 +257,18 @@ const Feedbacks: React.FC<FeedbacksProps> = ({ foodDetails, offerId }) => {
         <TouchableOpacity
           style={{
             ...styles.commentButton,
-            width: isWeb ? 200 : '90%',
-            borderRadius: isWeb ? 50 : 50,
+            // width: isWeb ? 150 : '90%', // Reduced width for web and mobile
+            width: resp ? 200 : '90%',
+            borderRadius: resp ? 50 : 50,
           }}
           onPress={() => submitCommentFeedback(comment)}
           disabled={previousFeedback?.comment === comment}
         >
-          {loading.submitLoading ? <ActivityIndicator color={theme.background} size={22} /> : <Text style={styles.commentLabel}>Comment</Text>}
+          {loading.submitLoading ? (
+            <ActivityIndicator color={theme.background} size={22} />
+          ) : (
+            <Text style={styles.commentLabel}>Comment</Text>
+          )}
         </TouchableOpacity>
       </View>
       <PermissionModal isVisible={warning} setIsVisible={setWarning} />

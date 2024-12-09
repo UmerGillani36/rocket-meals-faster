@@ -32,69 +32,37 @@ const CanteenFeedbackLabels: React.FC<CanteenFeedbackLabelProps> = ({
 
     // Use useMemo to optimize the filtering processs
     const labelData = useMemo(() => {
-      return (
-        ownCanteenFeedBackLabelEntries?.find(
-          (entry: CanteensFeedbacksLabelsEntries) =>
-            entry.label === label?.id &&
-            entry.canteen === selectedCanteen.id &&
-            isSameDay(entry.date, date)
-        ) || ({} as FoodsFeedbacksLabelsEntries)
-      );
+        return ownCanteenFeedBackLabelEntries.find((entry: CanteensFeedbacksLabelsEntries) => entry.label === label?.id && entry.canteen === selectedCanteen.id && isSameDay(entry.date, date)) || {} as FoodsFeedbacksLabelsEntries;
     }, [ownCanteenFeedBackLabelEntries, date]);
 
     // Function to handle updating the entry
     const handleUpdateEntry = async (isLike: boolean | null) => {
-      if (!user?.id) {
-        setWarning(true);
-        return;
-      }
-      let likeStats = null;
-      if (isLike === true && labelData?.like === true) {
-        likeStats = null;
-      } else if (isLike === false && labelData?.like === false) {
-        likeStats = null;
-      } else {
-        likeStats = isLike;
-      }
-      // Update the entry
-      const result =
-        await canteenFeedbackLabelEntryHelper.updateCanteenFeedbackLabelEntry(
-          profile.id,
-          ownCanteenFeedBackLabelEntries,
-          label?.id,
-          likeStats,
-          selectedCanteen.id,
-          date
-        );
-      getLabelEntries(label?.id);
-      dispatch({
-        type: result
-          ? UPDATE_OWN_CANTEEN_FEEDBACK_LABEL_ENTRIES
-          : DELETE_OWN_CANTEEN_FEEDBACK_LABEL_ENTRIES,
-        payload: result ? result : labelData.id,
-      });
+        if (!user?.id) {
+            setWarning(true);
+            return;
+        }
+        let likeStats = null;
+        if (isLike === true && labelData?.like === true) {
+            likeStats = null;
+        } else if (isLike === false && labelData?.like === false) {
+            likeStats = null;
+        } else {
+            likeStats = isLike;
+        }
+        // Update the entry
+        const result = await canteenFeedbackLabelEntryHelper.updateCanteenFeedbackLabelEntry(profile.id, ownCanteenFeedBackLabelEntries, label?.id, likeStats, selectedCanteen.id, date);
+        getLabelEntries(label?.id);
+        dispatch({ type: result ? UPDATE_OWN_CANTEEN_FEEDBACK_LABEL_ENTRIES : DELETE_OWN_CANTEEN_FEEDBACK_LABEL_ENTRIES, payload: result ? result : labelData.id });
     };
 
     const getLabelEntries = async (labelId: string) => {
-      // Fetch the label entriess
-      const result =
-        (await canteenFeedbackLabelEntryHelper.fetchCanteenFeedbackLabelEntries(
-          {},
-          date,
-          selectedCanteen.id,
-          labelId
-        )) as any;
-      if (result) {
-        const likes =
-          result?.find(
-            (entry: CanteensFeedbacksLabelsEntries) => entry.like === true
-          )?.count || 0;
-        const dislikes =
-          result?.find(
-            (entry: CanteensFeedbacksLabelsEntries) => entry.like === false
-          )?.count || 0;
-        setCount({ likes, dislikes });
-      }
+        // Fetch the label entriess
+        const result = (await canteenFeedbackLabelEntryHelper.fetchCanteenFeedbackLabelEntries({}, date, selectedCanteen.id, labelId)) as any;
+        if (result) {
+            const likes = result.find((entry: CanteensFeedbacksLabelsEntries) => entry.like === true)?.count || 0;
+            const dislikes = result.find((entry: CanteensFeedbacksLabelsEntries) => entry.like === false)?.count || 0;
+            setCount({ likes, dislikes });
+        }
     };
 
     useEffect(() => {

@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import styles from './styles';
 import { useTheme } from '@/hooks/useTheme';
 import {
@@ -132,6 +138,42 @@ export default function FoodDetailsScreen() {
     getFoodDetails();
     // getFoodFeedbacks();
   }, []);
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+
+  let containerWidth;
+
+  if (isWeb) {
+    const windowWidth = Dimensions.get('window').width;
+
+    if (windowWidth < 600) {
+      containerWidth = '95%';
+    } else {
+      containerWidth = '80%';
+    }
+  } else {
+    containerWidth = '100%';
+  }
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(Dimensions.get('window').width);
+    };
+
+    const subscription = Dimensions.addEventListener('change', handleResize);
+
+    return () => subscription?.remove();
+
+  }, []);
+
+  const isbreak = screenWidth > 1000 ? 'row' : screenWidth > 480 ? '' : '';
+  const cardWidth = screenWidth > 1000 ? '50%' : "100%";
+  const cardHeight = screenWidth > 1000 ? 400 : 'auto';
+
+  const detailcon = screenWidth > 1000 ? 'space-between' : "";
+  const aligndetails = screenWidth > 1000 ? 'flex-start' : "center";
+  const Textalign = screenWidth > 1000 ? '' : "center";
+  const imagewidth = screenWidth > 1000 ? 400 : "100%";
+  const cardDirection = screenWidth > 1000 ? '' : "";
 
   return (
     <SafeAreaView
@@ -162,9 +204,9 @@ export default function FoodDetailsScreen() {
           }}
         >
           {isWeb ? (
-            <View style={{ ...styles.featuredContainer, width: '80%' }}>
-              <View style={styles.foodDetail}>
-                <View style={styles.imageContainer}>
+            <View style={{ ...styles.featuredContainer, width: screenWidth > 1000 ? '80%' : '100%', flexDirection: isbreak, }}>
+              <View style={{ ...styles.foodDetail, width: cardWidth, alignItems: aligndetails }}>
+                <View style={{ ...styles.imageContainer, width: imagewidth }}>
                   <Image
                     style={styles.featuredImage}
                     contentFit='cover'
@@ -178,32 +220,27 @@ export default function FoodDetailsScreen() {
                   />
                 </View>
                 <Text
-                  style={{ ...styles.foodHeading, color: theme.screen.text }}
+                  style={{ ...styles.foodHeading, color: theme.screen.text, textAlign: Textalign, fontSize: screenWidth > 800 ? 44 : 24 }}
                 >
                   {foodDetails?.name}
                 </Text>
               </View>
-              <View style={styles.detailsContainer}>
-                <View style={styles.header}>
-                  <View style={styles.row}>
+              <View style={{ ...styles.detailsContainer, width: cardWidth, justifyContent: detailcon, height: cardHeight, paddingHorizontal: screenWidth > 800 ? 20 : 0 }}>
+                <View style={{ width: '100%', alignItems: 'flex-end' }}>
+                  <View style={styles.ratingView}>
+                    <AntDesign name='star' size={22} color={theme.primary} />
                     <Text
-                      style={{ ...styles.medium, color: theme.screen.text }}
-                    />
-                    <View style={styles.ratingView}>
-                      <AntDesign name='star' size={22} color={theme.primary} />
-                      <Text
-                        style={{
-                          ...styles.totalRating,
-                          color: theme.screen.text,
-                        }}
-                      >
-                        {foodDetails?.rating_average &&
-                          numToOneDecimal(foodDetails.rating_average)}
-                      </Text>
-                    </View>
+                      style={{
+                        ...styles.totalRating,
+                        color: theme.screen.text,
+                      }}
+                    >
+                      {foodDetails?.rating_average &&
+                        numToOneDecimal(foodDetails.rating_average)}
+                    </Text>
                   </View>
                 </View>
-                <View style={styles.ratingContainer}>
+                <View style={{ ...styles.ratingContainer, marginTop: screenWidth > 1000 ? 0 : 20 }}>
                   <Text style={{ ...styles.rateUs, color: theme.screen.text }}>
                     Rate Us
                   </Text>
@@ -313,7 +350,8 @@ export default function FoodDetailsScreen() {
             style={{
               ...styles.notificationContainer,
               backgroundColor: theme.drawerBg,
-              width: isWeb ? '80%' : '100%',
+              // width: isWeb ? '80%' : '100%',
+              width: containerWidth,
             }}
           >
             <Text
@@ -357,7 +395,8 @@ export default function FoodDetailsScreen() {
           <View
             style={{
               ...styles.tabViewContainer,
-              width: isWeb ? '80%' : '100%',
+              // width: isWeb ? '80%' : '100%',
+              width: containerWidth,
             }}
           >
             <View
@@ -408,7 +447,7 @@ export default function FoodDetailsScreen() {
               style={{
                 ...styles.pagerView,
                 width: isWeb ? '95%' : '100%',
-                paddingHorizontal: isWeb ? 20 : 10,
+                paddingHorizontal: isWeb ? screenWidth > 1000 ? 20 : 0 : 10,
               }}
             >
               {foodDetails?.id && renderContent(foodDetails)}

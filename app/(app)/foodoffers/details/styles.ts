@@ -3,27 +3,22 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
   container: {
     flex: 1,
-    // width: '100%',
-    // height: '100%',
   },
   contentContainer: {
     alignItems: 'center',
     paddingBottom: 60,
   },
   featuredContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    width: '80%',
     gap: 10,
     padding: 10,
   },
   foodDetail: {
-    width: 400,
+    // width: "80%",
     alignItems: 'flex-start',
   },
   imageContainer: {
-    // width: '50%',
-    width: 400,
+    // width: 400,
     height: 400,
     borderRadius: 25,
     backgroundColor: 'rgba(0,0,0,0.3)',
@@ -57,11 +52,12 @@ export default StyleSheet.create({
     borderRadius: 25,
   },
   detailsContainer: {
-    width: '55%',
-    height: 400,
-    paddingHorizontal: 20,
+    // width: '55%',
+    // height: 400,
+    // paddingHorizontal: 20,
     paddingVertical: 15,
     justifyContent: 'space-between',
+    // flexDirection: 'row'
   },
   mobileDetailsHeader: {
     width: '100%',
@@ -70,9 +66,7 @@ export default StyleSheet.create({
     width: '100%',
     alignItems: 'flex-end',
   },
-  header: {
-    width: '100%',
-  },
+
   row: {
     width: '100%',
     flexDirection: 'row',
@@ -119,10 +113,9 @@ export default StyleSheet.create({
     marginTop: 4,
   },
   foodHeading: {
-    width: '100%',
     // textAlign: 'center',
-    fontSize: 44,
-    lineHeight: 55,
+    // fontSize: 44,
+    // lineHeight: 55,
     fontFamily: 'Poppins_700Bold',
     marginTop: 10,
   },
@@ -202,7 +195,7 @@ export default StyleSheet.create({
   tabViewContainer: {
     gap: 20,
     marginTop: 30,
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   tabs: {
     flexDirection: 'row',

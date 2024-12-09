@@ -1,9 +1,13 @@
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styles from './styles';
 import { FOOD_DATA, isWeb } from '@/constants/Constants';
 import { useTheme } from '@/hooks/useTheme';
-import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import {
+  AntDesign,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from '@expo/vector-icons';
 import { FoodItemProps } from './types';
 import {
   excerpt,
@@ -12,7 +16,12 @@ import {
   showPrice,
 } from '@/constants/HelperFunctions';
 import { getTextFromTranslation } from '@/helper/resourceHelper';
-import { Foods, FoodsFeedbacks, ProfilesMarkings } from '@/constants/types';
+import {
+  Foods,
+  FoodsFeedbacks,
+  Markings,
+  ProfilesMarkings,
+} from '@/constants/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { FoodFeedbackHelper } from '@/redux/actions/FoodFeedbacks/FoodFeedbacks';
 import {
@@ -37,6 +46,7 @@ const FoodItem: React.FC<FoodItemProps> = ({
   const { theme } = useTheme();
   const { food } = item;
   const foodItem = food as Foods;
+  const { markings } = useSelector((state: any) => state.food);
   const { user, profile, isManagement } = useSelector(
     (state: any) => state.authReducer
   );
@@ -54,13 +64,15 @@ const FoodItem: React.FC<FoodItemProps> = ({
     dispatch({
       type: SET_SELECTED_FOOD_MARKINGS,
       payload: dislikedMarkings,
-    })
+    });
     handleEatingHabitsSheet();
   };
 
   const dislikedMarkings = item?.markings.filter((marking) => {
-    return profile?.markings?.some((profileMarking: ProfilesMarkings) =>
-      profileMarking?.markings_id === marking?.markings_id && profileMarking?.like === false
+    return profile?.markings?.some(
+      (profileMarking: ProfilesMarkings) =>
+        profileMarking?.markings_id === marking?.markings_id &&
+        profileMarking?.like === false
     );
   });
 
@@ -89,6 +101,20 @@ const FoodItem: React.FC<FoodItemProps> = ({
     } catch (e) {
       console.error('Error creating feedback:', e);
     }
+  };
+
+  const markingsData = useMemo(
+    () =>
+      markings
+        .filter((m: Markings) =>
+          item?.markings.some((mark) => mark.markings_id === m.id)
+        )
+        .slice(0, 2), // Limit to a maximum of 2 items
+    [markings, item?.markings]
+  );
+
+  const handlePriceChange = () => {
+    router.navigate('/settings/price-group');
   };
 
   return (
@@ -122,12 +148,14 @@ const FoodItem: React.FC<FoodItemProps> = ({
             }}
             source={{
               uri:
-                foodItem?.image_remote_url || getImageUrl(foodItem?.image) || '',
+                foodItem?.image_remote_url ||
+                getImageUrl(foodItem?.image) ||
+                '',
             }}
 
-          // contentFit='cover'
-          // cachePolicy={'memory-disk'}
-          // transition={500}
+            // contentFit='cover'
+            // cachePolicy={'memory-disk'}
+            // transition={500}
           />
 
           <View style={styles.overlay} />
@@ -157,29 +185,29 @@ const FoodItem: React.FC<FoodItemProps> = ({
               </TouchableOpacity>
             )}
           </TouchableOpacity>
-          {
-            dislikedMarkings.length > 0 &&
-            <TouchableOpacity style={styles.favContainerWarn}
-              onPress={handleOpenSheet}>
-              <MaterialCommunityIcons
-                name='medical-bag'
-                size={20}
-                color={'#000'}
-              />
+          {dislikedMarkings.length > 0 && (
+            <TouchableOpacity
+              style={styles.favContainerWarn}
+              onPress={handleOpenSheet}
+            >
+              <MaterialIcons name='warning' size={20} color={'#000'} />
             </TouchableOpacity>
-          }
+          )}
           <View style={styles.categoriesContainer}>
-            <TouchableOpacity onPress={handleMenuSheet}>
-              <Image
-                source={{
-                  uri: 'https://www.studentenwerk-osnabrueck.de/fileadmin/_processed_/5/8/csm_Mensa_Classic_rund_weiss_05f8706461.png',
-                }}
-                style={styles.categoryLogo}
-              // contentFit='cover'
-              // cachePolicy={'memory-disk'}
-              // transition={500}
-              />
-            </TouchableOpacity>
+            {markingsData?.map((mark: any) => (
+              <TouchableOpacity key={mark.id} onPress={handleMenuSheet}>
+                <Image
+                  source={{
+                    uri:
+                      mark?.image_remote_url || getImageUrl(mark?.image) || '',
+                  }}
+                  style={styles.categoryLogo}
+                  // contentFit='cover'
+                  // cachePolicy={'memory-disk'}
+                  // transition={500}
+                />
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
         <View
@@ -194,7 +222,10 @@ const FoodItem: React.FC<FoodItemProps> = ({
               ? excerpt(getTextFromTranslation(foodItem?.translations), 24)
               : excerpt(getTextFromTranslation(foodItem?.translations), 12)}
           </Text>
-          <TouchableOpacity style={{ ...styles.priceButton }}>
+          <TouchableOpacity
+            style={{ ...styles.priceButton }}
+            onPress={handlePriceChange}
+          >
             <Text style={{ ...styles.price, color: 'black' }}>
               {showPrice(item, profile)}
             </Text>

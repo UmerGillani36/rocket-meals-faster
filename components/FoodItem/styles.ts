@@ -69,8 +69,8 @@ export default StyleSheet.create({
     gap: 5,
   },
   categoryLogo: {
-    width: 30,
-    height: 30,
+    width: 40,
+    height: 40,
     resizeMode: 'cover',
     borderRadius: 50,
     backgroundColor: 'rgba(0,0,0,0.2)',

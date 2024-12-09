@@ -1,4 +1,4 @@
-import { DELETE_FOOD_FEEDBACK_LOCAL, DELETE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES_LOCAL, SET_SELECTED_FOOD_MARKINGS, UPDATE_FOOD_FEEDBACK_LABELS, UPDATE_FOOD_FEEDBACK_LOCAL, UPDATE_MARKINGS, UPDATE_OWN_FOOD_FEEDBACK, UPDATE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES, UPDATE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES_LOCAL } from '@/redux/Types/types';
+import { DELETE_FOOD_FEEDBACK_LOCAL, DELETE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES_LOCAL, SET_FOOD_CATEGORIES, SET_FOOD_OFFERS_CATEGORIES, SET_SELECTED_FOOD_MARKINGS, UPDATE_FOOD_FEEDBACK_LABELS, UPDATE_FOOD_FEEDBACK_LOCAL, UPDATE_MARKINGS, UPDATE_OWN_FOOD_FEEDBACK, UPDATE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES, UPDATE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES_LOCAL } from '@/redux/Types/types';
   
   const initialState = {
     foodFeedbackLabels: [],
@@ -6,6 +6,8 @@ import { DELETE_FOOD_FEEDBACK_LOCAL, DELETE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES_LOCA
     ownfoodFeedbackLabelEntries: [],
     markings: [],
     selectedFoodMarkings: [],
+    foodCategories: [],
+    foodOfferCategories: [],
   };
   
   const foodReducer = (state = initialState, actions: any) => {
@@ -14,6 +16,18 @@ import { DELETE_FOOD_FEEDBACK_LOCAL, DELETE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES_LOCA
         return {
           ...state,
           foodFeedbackLabels: actions.payload,
+        };
+      }
+      case SET_FOOD_CATEGORIES: {
+        return {
+          ...state,
+          foodCategories: actions.payload,
+        };
+      }
+      case SET_FOOD_OFFERS_CATEGORIES: {
+        return {
+          ...state,
+          foodOfferCategories: actions.payload,
         };
       }
       case UPDATE_OWN_FOOD_FEEDBACK: {
@@ -25,7 +39,7 @@ import { DELETE_FOOD_FEEDBACK_LOCAL, DELETE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES_LOCA
       case UPDATE_FOOD_FEEDBACK_LOCAL: {
         let match = false;
         const feedbacks = state.ownFoodFeedbacks.map((feedback: any) => {
-            if (feedback.food_id === actions.payload.food_id) {
+            if (feedback.food === actions.payload.food) {
               match = true;
                 return actions.payload;
             }

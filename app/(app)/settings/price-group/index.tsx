@@ -55,7 +55,7 @@ const index = () => {
   };
 
   useEffect(() => {
-    setSelectedOption(profile?.price_group);
+    setSelectedOption(profile?.price_group || 'student');
   }, [profile]);
 
   return (

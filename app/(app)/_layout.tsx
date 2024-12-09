@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'expo-router';
 import { ProfileHelper } from '@/redux/actions/Profile/Profile';
 import { Profiles } from '@/constants/types';
-import { SET_OWN_CANTEEN_FEEDBACK_LABEL_ENTRIES, UPDATE_FOOD_FEEDBACK_LABELS, UPDATE_MARKINGS, UPDATE_OWN_FOOD_FEEDBACK, UPDATE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES, UPDATE_PROFILE } from '@/redux/Types/types';
+import { SET_FOOD_CATEGORIES, SET_FOOD_OFFERS_CATEGORIES, SET_OWN_CANTEEN_FEEDBACK_LABEL_ENTRIES, UPDATE_FOOD_FEEDBACK_LABELS, UPDATE_MARKINGS, UPDATE_OWN_FOOD_FEEDBACK, UPDATE_OWN_FOOD_FEEDBACK_LABEL_ENTRIES, UPDATE_PROFILE } from '@/redux/Types/types';
 import { FoodFeedbackLabelHelper } from '@/redux/actions/FoodFeedbacksLabel/FoodFeedbacksLabel';
 import { FoodFeedbackHelper } from '@/redux/actions/FoodFeedbacks/FoodFeedbacks';
 import { FoodFeedbackLabelEntryHelper } from '@/redux/actions/FoodFeeedbackLabelEntries/FoodFeedbackLabelEntries';
@@ -14,13 +14,17 @@ import { MarkingHelper } from '@/redux/actions/Markings/Markings';
 import { SafeAreaView } from 'react-native';
 import CustomMenuHeader from '@/components/CustomMenuHeader/CustomMenuHeader';
 import { CanteenFeedbackLabelEntryHelper } from '@/redux/actions/CanteenFeedbackLabelEntries/CanteenFeedbackLabelEntries';
+import { FoodCategoriesHelper } from '@/redux/actions/FoodCategories/FoodCategories';
+import { FoodOffersCategoriesHelper } from '@/redux/actions/FoodOffersCategories/FoodOffersCategories';
 
 export default function Layout() {
   const { theme } = useTheme();
   const dispatch = useDispatch();
   const markingHelper = new MarkingHelper();
   const foodFeedbackHelper = new FoodFeedbackHelper();
+  const foodCategoriesHelper = new FoodCategoriesHelper();
   const foodfeedbackLabelHelper = new FoodFeedbackLabelHelper();
+  const foodOffersCategoriesHelper = new FoodOffersCategoriesHelper();
   const foodFeedbackLabelEntryHelper = new FoodFeedbackLabelEntryHelper();
   const canteenFeedbackLabelEntryHelper = new CanteenFeedbackLabelEntryHelper();
   const profileHelper = new ProfileHelper();
@@ -128,11 +132,35 @@ export default function Layout() {
     }
   }, [profile]);
 
+  const getFoodCategories = async () => {
+    try {
+      const result = await foodCategoriesHelper.fetchFoodCategories({});
+      if (result) {
+        dispatch({ type: SET_FOOD_CATEGORIES, payload: result });
+      }
+    } catch (error) {
+      console.error('Error fetching food categories:', error);
+    }
+  };
+
+  const getFoodOffersCategories = async () => {
+    try {
+      const result = await foodOffersCategoriesHelper.fetchFoodOffersCategories({});
+      if (result) {
+        dispatch({ type: SET_FOOD_OFFERS_CATEGORIES, payload: result });
+      }
+    } catch (error) {
+      console.error('Error fetching food offers categories:', error);
+    }
+  };
+
   useEffect(() => {
     if (user?.id) {
       fetchProfile();
     }
     getMarkings();
+    getFoodCategories();
+    getFoodOffersCategories();
     getFoodFeedBackLabels();
   }, [user]);
 

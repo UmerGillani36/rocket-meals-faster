@@ -8,17 +8,22 @@ import RedirectButton from '../RedirectButton';
 import { useSelector } from 'react-redux';
 import { isWeb, nutritionLabels } from '@/constants/Constants';
 import { useLocalSearchParams } from 'expo-router';
-import { filterNullishProperties, formatFoodInformationValue } from '@/constants/HelperFunctions';
+import {
+  filterNullishProperties,
+  formatFoodInformationValue,
+} from '@/constants/HelperFunctions';
 import { Icon } from '@/helper/iconHelper';
 import { IconNames } from '@/constants/IconNames';
 import { extractFoodDetails } from '@/helper/resourceHelper';
 
-const Details = ({ }) => {
+const Details = ({}) => {
   const { theme } = useTheme();
   const { foodId } = useLocalSearchParams();
   const [foodDetails, setFoodDetails] = useState<any>(null);
   const extractedDetails = foodDetails ? extractFoodDetails(foodDetails) : null;
-  const foodOffers = useSelector((state: any) => state.canteenReducer.selectedCanteenFoodOffers);
+  const foodOffers = useSelector(
+    (state: any) => state.canteenReducer.selectedCanteenFoodOffers
+  );
 
   const getFoodDetails = async () => {
     foodOffers.forEach((offers: Foodoffers) => {
@@ -56,13 +61,18 @@ const Details = ({ }) => {
         {extractedDetails &&
           Object.entries(extractedDetails).map(([key, value]) => {
             const iconName = nutritionLabels[key];
-            const icon = iconName && IconNames[iconName as keyof typeof IconNames];
+            const icon =
+              iconName && IconNames[iconName as keyof typeof IconNames];
             return (
               <View style={styles.nutrition} key={key}>
-                {icon && <Icon name={icon} size={20} color={theme.screen.icon} />}
+                {icon && (
+                  <Icon name={icon} size={20} color={theme.screen.icon} />
+                )}
                 <View style={styles.averageNutrition}>
                   <Text style={{ ...styles.label, color: theme.screen.text }}>
-                    {value !== null && value !== undefined ? formatFoodInformationValue(value as number, 'g') : 'N/A'}
+                    {value !== null && value !== undefined
+                      ? formatFoodInformationValue(value as number, 'g')
+                      : 'N/A'}
                   </Text>
                   <Text style={{ ...styles.label, color: theme.screen.text }}>
                     {nutritionLabels[key]}
@@ -70,9 +80,7 @@ const Details = ({ }) => {
                 </View>
               </View>
             );
-          })
-        }
-
+          })}
       </View>
 
       <Text style={{ ...styles.body, color: theme.screen.text }}>
@@ -80,7 +88,10 @@ const Details = ({ }) => {
       </Text>
       <View style={styles.row}>
         <AntDesign name='cloud' size={24} color={theme.screen.icon} />
-        <Text style={{ ...styles.body, color: theme.screen.text }}>{foodDetails?.co2_g !== null && formatFoodInformationValue(foodDetails?.co2_g, 'g')}</Text>
+        <Text style={{ ...styles.body, color: theme.screen.text }}>
+          {foodDetails?.co2_g !== null &&
+            formatFoodInformationValue(foodDetails?.co2_g, 'g')}
+        </Text>
         <Text style={{ ...styles.body, color: theme.screen.text }}>
           CO₂ Emissions
         </Text>

@@ -84,9 +84,9 @@ const CanteenSelectionSheet: React.FC<CanteenSelectionSheetProps> = ({
                 source={{
                   uri: canteen?.image_url || canteensData[index].image,
                 }}
-                // transition={500}
-                // contentFit='cover'
-                // cachePolicy={'memory-disk'}
+              // transition={500}
+              // contentFit='cover'
+              // cachePolicy={'memory-disk'}
               />
             </View>
             <Text style={{ ...styles.canteenName, color: theme.card.text }}>
