@@ -28,7 +28,7 @@ export default function Login() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['50%'], []);
   const attentionSheetRef = useRef<BottomSheet>(null);
-  const attentionSnapPoints = useMemo(() => ['70%'], []);
+  const attentionSnapPoints = useMemo(() => ['80%'], []);
   const [isWebVisible, setIsWebVisible] = useState(
     Dimensions.get('window').width > 500
   );

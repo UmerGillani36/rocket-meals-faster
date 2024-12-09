@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native';
+import { Dimensions, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import styles from './styles';
 import { useTheme } from '@/hooks/useTheme';
@@ -57,7 +57,15 @@ const Details = ({}) => {
       <Text style={{ ...styles.body, color: theme.screen.text }}>
         Average Nutritional Values per Portion
       </Text>
-      <View style={styles.nutritionsContainer}>
+      <View
+        style={{
+          ...styles.nutritionsContainer,
+          justifyContent:
+            Dimensions.get('window').width > 800
+              ? 'flex-start'
+              : 'space-around',
+        }}
+      >
         {extractedDetails &&
           Object.entries(extractedDetails).map(([key, value]) => {
             const iconName = nutritionLabels[key];

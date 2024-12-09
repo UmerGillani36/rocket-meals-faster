@@ -192,10 +192,10 @@ const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
     return date; // Return the date if it's not Today, Yesterday, or Tomorrow
   };
 
-  const updateSort = (id: string) => {
+  const updateSort = (id: string, foodOffers: Foodoffers[]) => {
 
     // Copy food offers to avoid mutation
-    let copiedFoodOffers = [...canteenFoodOffers];
+    let copiedFoodOffers = [...foodOffers];
 
     // Sorting logic based on option id
     switch (id) {
@@ -237,7 +237,7 @@ const index: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
       );
       const foodOffers = foodData?.data || [];
 
-      updateSort(sortBy);
+      updateSort(sortBy, foodOffers);
 
       dispatch({ type: SET_SELECTED_CANTEEN_FOOD_OFFERS_LOCAL, payload: foodOffers });
       setLoading(false);

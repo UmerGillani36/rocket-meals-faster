@@ -31,12 +31,19 @@ interface Translation {
     languages_code: string;
     text?: string;
     name?: string;
+    description?: string;
 }
 
 const getTextFromTranslation = (translations: Array<Translation>): string => {
     if (!translations || translations.length === 0) return '';
     const translation = translations.find((t) => t.languages_code === languageCode);
     return translation?.text || translation?.name || '';
+};
+
+const getDescriptionFromTranslation = (translations: Array<Translation>): string => {
+    if (!translations || translations.length === 0) return '';
+    const translation = translations.find((t) => t.languages_code === languageCode);
+    return translation?.description || '';
 };
 
 const extractFoodDetails = (food: Foodoffers) => {
@@ -162,4 +169,4 @@ export function getFoodName(food: string | Foods | null | undefined, languageCod
     return null;
 }
 
-export { getIconComponent, getTextFromTranslation, extractFoodDetails };
+export { getIconComponent, getTextFromTranslation, extractFoodDetails, getDescriptionFromTranslation };

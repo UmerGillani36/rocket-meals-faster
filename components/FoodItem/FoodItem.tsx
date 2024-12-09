@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FoodFeedbackHelper } from '@/redux/actions/FoodFeedbacks/FoodFeedbacks';
 import {
   DELETE_FOOD_FEEDBACK_LOCAL,
+  SET_MARKING_DETAILS,
   SET_SELECTED_FOOD_MARKINGS,
   UPDATE_FOOD_FEEDBACK_LOCAL,
 } from '@/redux/Types/types';
@@ -113,6 +114,14 @@ const FoodItem: React.FC<FoodItemProps> = ({
     [markings, item?.markings]
   );
 
+  const openMarkingLabel = (marking: Markings) => {
+    dispatch({
+      type: SET_MARKING_DETAILS,
+      payload: marking,
+    });
+    handleMenuSheet();
+  }
+
   const handlePriceChange = () => {
     router.navigate('/settings/price-group');
   };
@@ -153,9 +162,9 @@ const FoodItem: React.FC<FoodItemProps> = ({
                 '',
             }}
 
-            // contentFit='cover'
-            // cachePolicy={'memory-disk'}
-            // transition={500}
+          // contentFit='cover'
+          // cachePolicy={'memory-disk'}
+          // transition={500}
           />
 
           <View style={styles.overlay} />
@@ -187,24 +196,26 @@ const FoodItem: React.FC<FoodItemProps> = ({
           </TouchableOpacity>
           {dislikedMarkings.length > 0 && (
             <TouchableOpacity
-              style={styles.favContainerWarn}
+              style={{
+                ...styles.favContainerWarn,
+              }}
               onPress={handleOpenSheet}
             >
-              <MaterialIcons name='warning' size={20} color={'#000'} />
+              <MaterialIcons name='warning' size={20} color={theme.primary} />
             </TouchableOpacity>
           )}
           <View style={styles.categoriesContainer}>
             {markingsData?.map((mark: any) => (
-              <TouchableOpacity key={mark.id} onPress={handleMenuSheet}>
+              <TouchableOpacity key={mark.id} onPress={() => { openMarkingLabel(mark); }}>
                 <Image
                   source={{
                     uri:
                       mark?.image_remote_url || getImageUrl(mark?.image) || '',
                   }}
                   style={styles.categoryLogo}
-                  // contentFit='cover'
-                  // cachePolicy={'memory-disk'}
-                  // transition={500}
+                // contentFit='cover'
+                // cachePolicy={'memory-disk'}
+                // transition={500}
                 />
               </TouchableOpacity>
             ))}

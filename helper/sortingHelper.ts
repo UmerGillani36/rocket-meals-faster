@@ -68,7 +68,7 @@ export function sortByPublicFavorite(foodOffers: Foodoffers[]) {
   
 export function sortByEatingHabits(foodOffers: Foodoffers[], profileMarkingsData: any) {
     const profileMarkingsMap = new Map(
-      profileMarkingsData.map((marking: any) => [marking.markings_id, marking])
+      profileMarkingsData?.map((marking: any) => [marking.markings_id, marking])
     );
     foodOffers.sort((a, b) => {
       const calculateSortValue = (foodOffer: Foodoffers) => {
@@ -114,7 +114,7 @@ export function intelligentSort(foodOffers, ownFeedbacks, profileMarkings, langu
 
       if (foodOffer?.markings) {
         foodOffer.markings.forEach((marking) => {
-          const profileMarking = profileMarkings.find(
+          const profileMarking = profileMarkings?.find(
             (mark) => mark.markings_id === marking.markings_id
           );
 

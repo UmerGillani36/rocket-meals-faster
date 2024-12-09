@@ -14,7 +14,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    rowGap: 20,
+    rowGap: 10,
     marginTop: 20,
   },
   card: {
@@ -22,7 +22,6 @@ export default StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    height: '75%',
     borderRadius: 18,
   },
   image: {

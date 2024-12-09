@@ -47,11 +47,11 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  favContainerWarn : {
+  favContainerWarn: {
     width: 35,
     height: 35,
     borderRadius: 50,
-    backgroundColor: '#FF000095',
+    backgroundColor: 'rgba(0,0,0,0.2)',
     position: 'absolute',
     top: 45,
     right: 5,

@@ -101,21 +101,9 @@ const Home = () => {
 
   }, []);
 
-  // Determine the card width for small screens
-  const cardWidth = screenWidth > 768 ? '15%' : screenWidth > 480 ? '45%' : '45%';
-  const cardHeight = screenWidth > 768 ? '15%' : screenWidth > 480 ? '45%' : '45%';
-  const iscenter = screenWidth > 768 ? 'flex-start' : screenWidth > 480 ? 'center' : 'center';
-  const marginLeft = screenWidth > 768 ? 10 : screenWidth > 480 ? 0 : 0;
-  const calculateRatio = () => {
-    const screenWidth = Dimensions.get('window').width;
-    const cardWidth = screenWidth > 768
-      ? screenWidth * 0.15 // 15% of the screen width for large screens
-      : screenWidth > 480
-        ? screenWidth * 0.45 // 45% for medium screens
-        : screenWidth * 0.45; // 45% for smaller screens
-    console.log(cardWidth - 30)
-    return cardWidth - 30; // Subtract 30 for padding/margin adjustments
-  };
+  const iscenter =
+    screenWidth > 768 ? 'flex-start' : screenWidth > 480 ? 'center' : 'center';
+
   return (
     <ScrollView
       style={{
@@ -130,8 +118,7 @@ const Home = () => {
           flexWrap: 'wrap',
           justifyContent: iscenter,
           gap: 10,
-          marginLeft: marginLeft
-          // margin: 10,
+          paddingHorizontal: screenWidth > 800 ? 20 : 0,
         }}
       >
         {canteens &&
@@ -139,8 +126,8 @@ const Home = () => {
             <TouchableOpacity
               style={{
                 ...styles.card,
-                width: calculateRatio(),
-                height: 210,
+                width: screenWidth > 800 ? 210 : 170,
+                height: screenWidth > 800 ? 250 : 210,
                 backgroundColor: theme.card.background,
                 marginBottom: 10,
               }}
@@ -149,16 +136,20 @@ const Home = () => {
                 handleSelectCanteen(canteen);
               }}
             >
-              <View style={styles.imageContainer}>
+              <View
+                style={{
+                  ...styles.imageContainer,
+                  height: screenWidth > 800 ? 210 : 170,
+                }}
+              >
                 <Image
                   style={styles.image}
                   source={canteen?.image_url}
-                  contentFit="cover"
+                  contentFit='cover'
                   placeholder={!canteen?.image_url && { blurhash }}
                   cachePolicy={'memory-disk'}
                   transition={500}
                 />
-
               </View>
               <Text style={{ ...styles.canteenName, color: theme.card.text }}>
                 {excerpt(String(canteen.alias), 12)}

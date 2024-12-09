@@ -6,28 +6,15 @@ import styles from './styles';
 import { MenuSheetProps } from './types';
 import { isWeb } from '@/constants/Constants';
 import { useTheme } from '@/hooks/useTheme';
+import { useSelector } from 'react-redux';
+import { getImageUrl } from '@/constants/HelperFunctions';
+import { getDescriptionFromTranslation, getTextFromTranslation } from '@/helper/resourceHelper';
 // import { Image } from 'expo-image';
 
 const MenuSheet: React.FC<MenuSheetProps> = ({ closeSheet }) => {
   const { theme } = useTheme();
-  const body = [
-    { id: 1, label: 'MENSA CLASSIC HEARTY AND SAVORY' },
-    {
-      id: 2,
-      label:
-        'MENSA CLASSIC is characterized by regional specialities and traditional German and European cuisine. Mainly seasonal ingredients are used.',
-    },
-    {
-      id: 3,
-      label:
-        'MENSA CLASSIC also stands for varied desserts ranging from fruity to creamy-sweet.',
-    },
-    {
-      id: 4,
-      label:
-        'Examples from the MENSA CLASSIC menu line include burgers, schnitzel, stews and pasta dishes.',
-    },
-  ];
+  const { markingDetails } = useSelector((state: any) => state.food);
+
   return (
     <BottomSheetScrollView
       style={{ ...styles.sheetView, backgroundColor: theme.sheet.sheetBg }}
@@ -47,7 +34,8 @@ const MenuSheet: React.FC<MenuSheetProps> = ({ closeSheet }) => {
             color: theme.sheet.text,
           }}
         >
-          {'Classic menu line (menu_line_c)'}
+          {getTextFromTranslation(markingDetails?.translations)}
+          {` (${markingDetails?.external_identifier})`}
         </Text>
         <TouchableOpacity
           style={{
@@ -63,22 +51,18 @@ const MenuSheet: React.FC<MenuSheetProps> = ({ closeSheet }) => {
         <View style={styles.imageContainer}>
           <Image
             source={{
-              uri: 'https://www.studentenwerk-osnabrueck.de/fileadmin/_processed_/5/8/csm_Mensa_Classic_rund_weiss_05f8706461.png',
+              uri:
+                markingDetails?.image_remote_url || getImageUrl(markingDetails?.image) || '',
             }}
             style={styles.image}
           />
         </View>
-        {body.map((value) => (
-          <Text
-            style={{
-              ...styles.body,
-              color: theme.sheet.text,
-            }}
-            key={value.id}
-          >
-            {value.label}
-          </Text>
-        ))}
+        <Text
+          style={{
+            ...styles.body,
+            color: theme.sheet.text,
+          }}
+        >{getDescriptionFromTranslation(markingDetails?.translations)}</Text>
       </View>
     </BottomSheetScrollView>
   );
