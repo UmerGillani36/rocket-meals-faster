@@ -27,6 +27,8 @@ export default StyleSheet.create({
   },
   label: {
     fontFamily: 'Poppins_400Regular',
+    marginTop: 2,
+    marginLeft: 8,
   },
   likeButton: {
     padding: 12,

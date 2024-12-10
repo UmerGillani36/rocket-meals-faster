@@ -39,7 +39,7 @@ const AttentionSheet: React.FC<AttentionSheetProps> = ({ closeSheet, handleLogin
         Attention!
       </Text>
       <View
-        style={{ ...styles.attentionContent, width: isWeb ? '60%' : '100%' }}
+        style={{ ...styles.attentionContent, width: isWeb ? '80%' : '100%' }}
       >
         <Text style={{ ...styles.attentionBody, color: theme.sheet.text }}>
           We respect your privacy and offer you the option to use the app as
@@ -48,10 +48,10 @@ const AttentionSheet: React.FC<AttentionSheetProps> = ({ closeSheet, handleLogin
           because an account is required for these.
         </Text>
         <View
-          style={{ ...styles.attentionActions, width: isWeb ? '40%' : '100%' }}
+          style={{ ...styles.attentionActions, width: isWeb ? '60%' : '100%' }}
         >
-          <TouchableOpacity style={styles.confirmButton} onPress={() => { handleLogin(); }}>
-            <Text style={styles.confirmLabel}>Confirm</Text>
+          <TouchableOpacity style={[styles.confirmButton, { backgroundColor: theme.primary }]} onPress={() => { handleLogin(); }}>
+            <Text style={[styles.confirmLabel, { color: theme.light }]}>Confirm</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.cancleButton} onPress={closeSheet}>
             <Text style={styles.confirmLabel}>Cancel</Text>

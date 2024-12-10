@@ -125,7 +125,6 @@ const Feedbacks: React.FC<FeedbacksProps> = ({ foodDetails, offerId }) => {
               ...styles.label,
               color: theme.screen.text,
               fontSize: isWeb ? 18 : 14,
-              marginTop: 2,
             }}
           >
             Number of Ratings
@@ -136,10 +135,9 @@ const Feedbacks: React.FC<FeedbacksProps> = ({ foodDetails, offerId }) => {
             ...styles.label,
             color: theme.screen.text,
             fontSize: isWeb ? 18 : 14,
-            marginTop: 2,
           }}
         >
-          {foodDetails?.rating_amount}
+          {foodDetails?.rating_amount || foodDetails?.rating_amount_legacy}
         </Text>
       </View>
       <View style={styles.row}>
@@ -168,8 +166,8 @@ const Feedbacks: React.FC<FeedbacksProps> = ({ foodDetails, offerId }) => {
             marginTop: 2,
           }}
         >
-          {foodDetails?.rating_average &&
-            numToOneDecimal(foodDetails.rating_average)}
+          {(foodDetails?.rating_average || foodDetails?.rating_average_legacy) &&
+            numToOneDecimal(foodDetails.rating_average || foodDetails?.rating_average_legacy)}
         </Text>
       </View>
       <Text

@@ -104,6 +104,7 @@ export const styles = StyleSheet.create({
   modalContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+    margin: 20,
   },
   modalView: {
     // height: 450,
@@ -116,8 +117,6 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   closeButton: {
-    // width: 50,
-    // height: 50,
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',

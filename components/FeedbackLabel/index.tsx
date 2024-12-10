@@ -77,7 +77,6 @@ const FeedbackLabel: React.FC<FeedbackLabelProps> = ({
             {
               color: theme.screen.text,
               fontSize: isWeb ? 18 : 14,
-              marginTop: 2,
             },
           ]}
         >

@@ -32,7 +32,7 @@ const CanteenFeedbackLabels: React.FC<CanteenFeedbackLabelProps> = ({
 
     // Use useMemo to optimize the filtering processs
     const labelData = useMemo(() => {
-        return ownCanteenFeedBackLabelEntries.find((entry: CanteensFeedbacksLabelsEntries) => entry.label === label?.id && entry.canteen === selectedCanteen.id && isSameDay(entry.date, date)) || {} as FoodsFeedbacksLabelsEntries;
+        return ownCanteenFeedBackLabelEntries?.find((entry: CanteensFeedbacksLabelsEntries) => entry.label === label?.id && entry.canteen === selectedCanteen.id && isSameDay(entry.date, date)) || {} as FoodsFeedbacksLabelsEntries;
     }, [ownCanteenFeedBackLabelEntries, date]);
 
     // Function to handle updating the entry

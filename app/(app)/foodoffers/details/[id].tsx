@@ -242,6 +242,7 @@ export default function FoodDetailsScreen() {
                 <Text
                   style={{
                     ...styles.foodHeading,
+                    width: imagewidth,
                     color: theme.screen.text,
                     textAlign: Textalign,
                     fontSize: screenWidth > 800 ? 44 : 24,
@@ -268,8 +269,8 @@ export default function FoodDetailsScreen() {
                         color: theme.screen.text,
                       }}
                     >
-                      {foodDetails?.rating_average &&
-                        numToOneDecimal(foodDetails.rating_average)}
+                      {(foodDetails?.rating_average || foodDetails?.rating_average_legacy) &&
+                        numToOneDecimal(foodDetails.rating_average || foodDetails?.rating_average_legacy)}
                     </Text>
                   </View>
                 </View>
@@ -287,7 +288,7 @@ export default function FoodDetailsScreen() {
                       <TouchableOpacity
                         key={index}
                         onPress={() => rateFood(index + 1)}
-                        style={{ padding: 10 }}
+                        style={{ padding: 5 }}
                       >
                         <AntDesign
                           name={
@@ -337,8 +338,8 @@ export default function FoodDetailsScreen() {
                           color: theme.screen.text,
                         }}
                       >
-                        {foodDetails?.rating_average &&
-                          numToOneDecimal(foodDetails.rating_average)}
+                        {(foodDetails?.rating_average || foodDetails?.rating_average_legacy) &&
+                          numToOneDecimal(foodDetails.rating_average || foodDetails?.rating_average_legacy)}
                       </Text>
                     </View>
                   </View>

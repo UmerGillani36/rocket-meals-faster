@@ -144,7 +144,7 @@ export default StyleSheet.create({
   stars: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 5,
   },
   mobileRatingContainer: {
     width: '100%',

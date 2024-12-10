@@ -23,6 +23,8 @@ export default StyleSheet.create({
   },
   label: {
     fontFamily: 'Poppins_400Regular',
+    marginTop: 2,
+    marginLeft: 10,
   },
   dislikeButton: {
     width: 40,

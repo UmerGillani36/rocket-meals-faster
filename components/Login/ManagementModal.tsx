@@ -86,7 +86,7 @@ const ManagementModal: React.FC<ManagementModalProps> = ({
       <View
         style={{
           ...styles.modalView,
-          height: isLargeScreen ? 430 : 450,
+          height: 450,
           backgroundColor: theme.modal.modalBg,
           width: modalWidth,
         }}
@@ -113,7 +113,7 @@ const ManagementModal: React.FC<ManagementModalProps> = ({
           style={{
             ...styles.modalHeading,
             color: theme.modal.text,
-            fontSize: Dimensions.get('window').width < 500 ? 26 : 36,
+            fontSize: Dimensions.get('window').width < 500 ? 23 : 28,
           }}
         >
           Management Login
@@ -165,6 +165,7 @@ const ManagementModal: React.FC<ManagementModalProps> = ({
         <TouchableOpacity
           style={{
             ...styles.loginButton,
+            marginBottom: 20,
             backgroundColor: isFormValid
               ? theme.primary
               : theme.modal.buttonDisabled,
@@ -175,7 +176,7 @@ const ManagementModal: React.FC<ManagementModalProps> = ({
             handleLogin(undefined, formState.email, formState.password)
           }
         >
-          <Text style={{ ...styles.loginLabel }}>Sign In</Text>
+          <Text style={{ ...styles.loginLabel, color: theme.light }}>Sign In</Text>
         </TouchableOpacity>
       </View>
     </Modal>
