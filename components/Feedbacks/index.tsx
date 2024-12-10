@@ -260,6 +260,7 @@ const Feedbacks: React.FC<FeedbacksProps> = ({ foodDetails, offerId }) => {
             // width: isWeb ? 150 : '90%', // Reduced width for web and mobile
             width: resp ? 200 : '90%',
             borderRadius: resp ? 50 : 50,
+            backgroundColor: theme.primary,
           }}
           onPress={() => submitCommentFeedback(comment)}
           disabled={previousFeedback?.comment === comment}
@@ -267,7 +268,7 @@ const Feedbacks: React.FC<FeedbacksProps> = ({ foodDetails, offerId }) => {
           {loading.submitLoading ? (
             <ActivityIndicator color={theme.background} size={22} />
           ) : (
-            <Text style={styles.commentLabel}>Comment</Text>
+            <Text style={[styles.commentLabel, { color: theme.light }]}>Comment</Text>
           )}
         </TouchableOpacity>
       </View>

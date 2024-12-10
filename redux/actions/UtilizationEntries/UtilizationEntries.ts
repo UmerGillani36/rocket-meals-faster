@@ -12,8 +12,9 @@ export class UtilizationEntryHelper extends CollectionHelper<any> {
   async fetchUtilizationEntries(queryOverride: any = {}, utilizationGroupId: string, dateToGet: string) {
     // Default query structure
     const defaultQuery = {
+      fields: ['*, utilization_group.*'],
       filter: {
-        _and: [] // Start with an empty array
+        _and: [], // Start with an empty array
       },
       limit: -1, // No limit by default, fetch all matching entries
     };

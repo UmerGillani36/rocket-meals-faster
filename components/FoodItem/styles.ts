@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   card: {
-    borderRadius: 18,
+    borderRadius: 21,
     justifyContent: 'space-between',
     paddingBottom: 10,
   },
@@ -21,20 +21,26 @@ export default StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    // backgroundColor: 'rgba(0,0,0,0.2)',
     borderTopRightRadius: 18,
     borderTopLeftRadius: 18,
   },
   editImageButton: {
+    position: 'absolute',
+    bottom: 10,
+    left: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: 35,
     height: 35,
     borderRadius: 50,
     backgroundColor: 'rgba(0,0,0,0.2)',
-    position: 'absolute',
-    top: 5,
-    left: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // position: 'absolute',
+    // top: 5,
+    // left: 5,
+    // justifyContent: 'center',
+    // alignItems: 'center',
   },
   favContainer: {
     width: 35,
@@ -59,21 +65,21 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   categoriesContainer: {
-    width: '100%',
-    position: 'absolute',
-    bottom: 10,
-    left: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
     gap: 5,
+    width: 35,
+    height: 35,
+    position: 'absolute',
+    top: 30,
+    left: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+
   },
   categoryLogo: {
     width: 40,
     height: 40,
     resizeMode: 'cover',
-    borderRadius: 50,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    // backgroundColor: 'rgba(0,0,0,0.2)',
   },
   image: {
     width: '100%',
@@ -81,7 +87,7 @@ export default StyleSheet.create({
     borderTopRightRadius: 18,
     borderTopLeftRadius: 18,
     resizeMode: 'cover',
-    borderBottomWidth: 2,
+    borderBottomWidth: 3,
   },
   foodName: {
     fontSize: 16,
@@ -108,4 +114,19 @@ export default StyleSheet.create({
     fontFamily: 'Poppins_700Bold',
     textAlign: 'center',
   },
+  priceTag: {
+    position: 'absolute',
+    bottom: 10, // Distance from the bottom of the image
+    right: 10, // Distance from the right of the image
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Semi-transparent black background
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5, // Rounded corners
+  },
+  priceText: {
+    color: '#FFF', // White text color for visibility
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+
 });

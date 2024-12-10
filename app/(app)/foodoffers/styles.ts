@@ -40,9 +40,11 @@ export default StyleSheet.create({
   foodContainer: {
     width: '100%',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'stretch',
+    // alignItems: 'center',
     flexWrap: 'wrap',
     marginTop: 20,
+    justifyContent: 'center'
   },
   sheetBackground: {
     borderTopRightRadius: 30,

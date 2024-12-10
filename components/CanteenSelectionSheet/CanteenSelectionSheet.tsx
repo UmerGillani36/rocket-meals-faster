@@ -1,5 +1,5 @@
-import { Image, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import styles from './styles';
@@ -20,11 +20,23 @@ const CanteenSelectionSheet: React.FC<CanteenSelectionSheetProps> = ({
   const router = useRouter();
   const dispatch = useDispatch();
   const canteens = useSelector((state: any) => state.canteenReducer.canteens);
+  const [screenWidth, setScreenWidth] = useState(
+    Dimensions.get('window').width
+  );
 
   const handleSelectCanteen = (canteen: CanteenProps) => {
     dispatch({ type: SET_SELECTED_CANTEEN, payload: canteen });
     closeSheet();
   };
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(Dimensions.get('window').width);
+    };
+
+    const subscription = Dimensions.addEventListener('change', handleResize);
+
+    return () => subscription?.remove();
+  }, []);
 
   return (
     <BottomSheetScrollView
@@ -60,8 +72,8 @@ const CanteenSelectionSheet: React.FC<CanteenSelectionSheetProps> = ({
       <View
         style={{
           ...styles.canteensContainer,
-          width: isWeb ? '80%' : '100%',
-          gap: isWeb ? 20 : 10,
+          width: isWeb ? '100%' : '100%',
+          gap: isWeb ? screenWidth < 500 ? 10 : 20 : 10,
           marginTop: isWeb ? 40 : 20,
         }}
       >
@@ -69,28 +81,36 @@ const CanteenSelectionSheet: React.FC<CanteenSelectionSheetProps> = ({
           <TouchableOpacity
             style={{
               ...styles.card,
-              width: isWeb ? 250 : '48%',
-              height: isWeb ? 200 : 200,
+              width: screenWidth > 800 ? 210 : 170,
+              height: screenWidth > 800 ? 250 : 210,
               backgroundColor: theme.card.background,
+              marginBottom: 10,
             }}
             key={canteen.alias}
             onPress={() => {
               handleSelectCanteen(canteen);
             }}
           >
-            <View style={styles.imageContainer}>
-              <Image
+            <View
+              style={{
+                ...styles.imageContainer,
+                height: screenWidth > 800 ? 210 : 170,
+              }}
+            >              <Image
                 style={styles.image}
                 source={{
                   uri: canteen?.image_url || canteensData[index].image,
                 }}
-              // transition={500}
-              // contentFit='cover'
-              // cachePolicy={'memory-disk'}
+
               />
             </View>
-            <Text style={{ ...styles.canteenName, color: theme.card.text }}>
-              {excerpt(String(canteen.alias), 12)}
+            <Text
+              style={{ ...styles.foodName, color: theme.card.text }}
+              numberOfLines={3}
+              ellipsizeMode="tail"
+            >
+              {excerpt(String(canteen.alias), 32)}
+
             </Text>
           </TouchableOpacity>
         ))}

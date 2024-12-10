@@ -73,11 +73,13 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,
+
   },
   checkbox: {
     marginRight: 15,
-    width: 20,
-    height: 20,
+    width: 30,
+    height: 30,
+
   },
   checkboxLabel: {
     fontSize: 12,
@@ -121,7 +123,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalHeading: {
-    marginTop:10,
+    marginTop: 10,
     fontSize: 36,
     fontFamily: 'Poppins_700Bold',
   },

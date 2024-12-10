@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { Slot } from 'expo-router';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import {
@@ -32,6 +32,22 @@ import { Image } from 'expo-image';
 import { ServerAPI } from '@/redux/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@/hooks/useTheme';
+import { SET_SERVER_INFO } from '@/redux/Types/types';
+import ServerStatusLoader from '@/components/ServerStatusLoader/ServerStatusLoader';
+
+ServerAPI.createAuthentificationStorage(
+  async () => {
+    const storedData = await AsyncStorage.getItem('auth_data');
+    return storedData ? JSON.parse(storedData) : null;
+  },
+  async (value) => {
+    if (value) {
+      await AsyncStorage.setItem('auth_data', JSON.stringify(value));
+    } else {
+      await AsyncStorage.removeItem('auth_data');
+    }
+  }
+);
 
 export default function Layout() {
   const { theme } = useTheme();
@@ -76,19 +92,21 @@ export default function Layout() {
     );
   }
 
-  ServerAPI.createAuthentificationStorage(
-    async () => {
-      const storedData = await AsyncStorage.getItem('auth_data');
-      return storedData ? JSON.parse(storedData) : null;
-    },
-    async (value) => {
-      if (value) {
-        await AsyncStorage.setItem('auth_data', JSON.stringify(value));
-      } else {
-        await AsyncStorage.removeItem('auth_data');
-      }
-    }
-  );
+  // useEffect(() => {
+  //   const getServerInfo = async () => {
+  //     try {
+  //       const result = await ServerAPI.downloadServerInfo();
+  //       console.log('Server Info:', result);
+  //       if (result) {
+  //         // configureStore.dispatch({ type: SET_SERVER_INFO, payload: result });
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching server info:', error);
+  //     }
+  //   };
+
+  //   getServerInfo();
+  // }, []);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -96,13 +114,13 @@ export default function Layout() {
         <PersistGate loading={null} persistor={persistor}>
           <RootSiblingParent>
             <ThemeProvider>
-              <SafeAreaView
-                style={{ flex: 1, backgroundColor: theme.screen.iconBg }}
-              >
-                {/* <I18nextProvider i18n={i18n}> */}
-                <Slot />
-                {/* </I18nextProvider> */}
-              </SafeAreaView>
+              <ServerStatusLoader>
+                <SafeAreaView
+                  style={{ flex: 1, backgroundColor: theme.screen.iconBg }}
+                >
+                  <Slot />
+                </SafeAreaView>
+              </ServerStatusLoader>
             </ThemeProvider>
           </RootSiblingParent>
         </PersistGate>

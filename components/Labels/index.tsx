@@ -37,7 +37,7 @@ const Labels = ({ _, offerId }) => {
         );
       })}
 
-      <Text style={{ ...styles.body, color: theme.screen.text }}>
+      <Text style={{ ...styles.body, color: theme.screen.text, fontStyle: 'italic' }}>
         The food labeling data is based on available information and may vary.
         We strive for a correct filter in the app, but technical problems cannot
         be ruled out. The awards on site apply. Further information on the data
@@ -47,8 +47,8 @@ const Labels = ({ _, offerId }) => {
         type={'link'}
         onClick={handleRedirect}
         label='Studentenwerk Osnabrueck'
-        backgroundColor='#FCDE31'
-        color={'#000000'}
+        backgroundColor={theme.primary}
+        color={'#FFF'}
       />
     </View>
   );

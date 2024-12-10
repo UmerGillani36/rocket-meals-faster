@@ -1,9 +1,10 @@
-import { CHANGE_THEME, SET_SORTING, SET_WARNING } from '@/redux/Types/types';
+import { CHANGE_THEME, SET_SERVER_INFO, SET_SORTING, SET_WARNING } from '@/redux/Types/types';
 
 const initialState = {
   theme: 'dark',
   isWarning: false,
   sortBy: 'none',
+  serverInfo: {},
 };
 
 const settingReducer = (state = initialState, actions: any) => {
@@ -24,6 +25,12 @@ const settingReducer = (state = initialState, actions: any) => {
       return {
         ...state,
         sortBy: actions.payload,
+      };
+    }
+    case SET_SERVER_INFO: {
+      return {
+        ...state,
+        serverInfo: actions.payload,
       };
     }
     default:

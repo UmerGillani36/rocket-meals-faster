@@ -51,10 +51,20 @@ export default StyleSheet.create({
     borderTopLeftRadius: 18,
     resizeMode: 'cover',
   },
-  canteenName: {
-    fontSize: 18,
+  // canteenName: {
+  //   fontSize: 18,
+  //   fontFamily: 'Poppins_700Bold',
+  //   marginTop: 10,
+  // },
+  foodName: {
+    fontSize: 16, // Adjust as needed
     fontFamily: 'Poppins_700Bold',
+    lineHeight: 22, // Ensure enough space between lines
+    paddingBottom: 2, // Add a little padding to prevent clipping
+    overflow: 'hidden', // Ensures no part of the text overflows its container
     textAlign: 'center',
-    marginTop: 10,
+    marginTop: 5,
+
   },
+
 });

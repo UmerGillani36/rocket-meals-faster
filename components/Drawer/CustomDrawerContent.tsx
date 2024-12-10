@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { ON_LOGOUT } from '@/redux/Types/types';
+import { getImageUrl } from '@/constants/HelperFunctions';
 
 const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
   navigation,
@@ -21,6 +22,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
   const router = useRouter();
   const activeIndex = state.index;
   const { isManagement } = useSelector((state: any) => state.authReducer);
+  const { serverInfo } = useSelector((state: any) => state.settings);
 
   const isActive = (routeName: string) => {
     const activeRoute = state.routes[activeIndex].name;
@@ -61,13 +63,14 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
         >
           <View style={styles.logoContainer}>
             <Image
-              source={require('../../assets/logo/customers/swosy.png')}
+              // source={require('../../assets/logo/customers/swosy.png')}
+              source={{ uri: getImageUrl(serverInfo?.info?.project?.project_logo) || '' }}
               style={styles.logo}
               resizeMode='contain'
             />
           </View>
           <Text style={{ ...styles.heading, color: theme.drawerHeading }}>
-            SWOSY 2.0
+            {serverInfo?.info?.project?.project_name || 'SWOSY 2.0'}
           </Text>
         </TouchableOpacity>
         <View style={styles.menuContainer}>
@@ -192,7 +195,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
           </TouchableOpacity>
           <TouchableOpacity
             style={getMenuItemStyle('faq-food/index')}
-            // onPress={() => navigation.navigate('faq-food/index')}
+          // onPress={() => navigation.navigate('faq-food/index')}
           >
             <Ionicons
               name='fast-food-outline'
@@ -207,7 +210,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = ({
           </TouchableOpacity>
           <TouchableOpacity
             style={getMenuItemStyle('faq-living/index')}
-            // onPress={() => navigation.navigate('faq-living/index')}
+          // onPress={() => navigation.navigate('faq-living/index')}
           >
             <MaterialCommunityIcons
               name='sofa-single-outline'

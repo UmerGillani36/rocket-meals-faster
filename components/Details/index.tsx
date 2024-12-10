@@ -16,7 +16,7 @@ import { Icon } from '@/helper/iconHelper';
 import { IconNames } from '@/constants/IconNames';
 import { extractFoodDetails } from '@/helper/resourceHelper';
 
-const Details = ({}) => {
+const Details = ({ }) => {
   const { theme } = useTheme();
   const { foodId } = useLocalSearchParams();
   const [foodDetails, setFoodDetails] = useState<any>(null);
@@ -104,7 +104,7 @@ const Details = ({}) => {
           CO₂ Emissions
         </Text>
       </View>
-      <Text style={{ ...styles.body1, color: theme.screen.text }}>
+      <Text style={{ ...styles.body1, color: theme.screen.text, fontStyle: 'italic' }}>
         The food labeling data is based on available information and may vary.
         We strive for a correct filter in the app, but technical problems cannot
         be ruled out. The awards on site apply. Further information on the data
@@ -113,8 +113,8 @@ const Details = ({}) => {
       <RedirectButton
         type={'link'}
         label='Studentenwerk Osnabrueck'
-        backgroundColor='#FCDE31'
-        color={'#000000'}
+        backgroundColor={theme.primary}
+        color={theme.light}
       />
     </View>
   );

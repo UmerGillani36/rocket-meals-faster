@@ -1,5 +1,5 @@
-import { Image, Text, TouchableOpacity, View } from 'react-native';
-import React, { useMemo, useState } from 'react';
+import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
 import styles from './styles';
 import { FOOD_DATA, isWeb } from '@/constants/Constants';
 import { useTheme } from '@/hooks/useTheme';
@@ -120,21 +120,36 @@ const FoodItem: React.FC<FoodItemProps> = ({
       payload: marking,
     });
     handleMenuSheet();
-  }
+  };
 
   const handlePriceChange = () => {
     router.navigate('/settings/price-group');
   };
+
+  const [screenWidth, setScreenWidth] = useState(
+    Dimensions.get('window').width
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(Dimensions.get('window').width);
+    };
+
+    const subscription = Dimensions.addEventListener('change', handleResize);
+
+    return () => subscription?.remove();
+  }, []);
 
   return (
     <>
       <TouchableOpacity
         style={{
           ...styles.card,
-          width: isWeb ? 250 : '48%',
-          height: isWeb ? 300 : 250,
+          width: screenWidth > 800 ? 210 : 170,
+          // height: screenWidth > 800 ? 250 : 210,
+          // minHeight: screenWidth > 800 ? 250 : 210,
           backgroundColor: theme.card.background,
-          borderWidth: dislikedMarkings.length > 0 ? 1 : 0,
+          borderWidth: dislikedMarkings.length > 0 ? 3 : 0,
           borderColor: '#FF000095',
         }}
         key={item?.alias}
@@ -147,7 +162,7 @@ const FoodItem: React.FC<FoodItemProps> = ({
         <View
           style={{
             ...styles.imageContainer,
-            height: isWeb ? '70%' : '70%',
+            height: screenWidth > 800 ? 210 : 170,
           }}
         >
           <Image
@@ -161,12 +176,7 @@ const FoodItem: React.FC<FoodItemProps> = ({
                 getImageUrl(foodItem?.image) ||
                 '',
             }}
-
-          // contentFit='cover'
-          // cachePolicy={'memory-disk'}
-          // transition={500}
           />
-
           <View style={styles.overlay} />
           {isManagement && (
             <TouchableOpacity
@@ -177,7 +187,7 @@ const FoodItem: React.FC<FoodItemProps> = ({
               }}
             >
               <MaterialCommunityIcons
-                name='image-edit'
+                name="image-edit"
                 size={20}
                 color={'white'}
               />
@@ -186,11 +196,11 @@ const FoodItem: React.FC<FoodItemProps> = ({
           <TouchableOpacity style={styles.favContainer}>
             {previousFeedback?.rating === 5 ? (
               <TouchableOpacity onPress={() => updateRating(null)}>
-                <AntDesign name='star' size={20} color={theme.primary} />
+                <AntDesign name="star" size={20} color={theme.primary} />
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => updateRating(5)}>
-                <AntDesign name='staro' size={20} color={'white'} />
+                <AntDesign name="staro" size={20} color={'white'} />
               </TouchableOpacity>
             )}
           </TouchableOpacity>
@@ -201,46 +211,40 @@ const FoodItem: React.FC<FoodItemProps> = ({
               }}
               onPress={handleOpenSheet}
             >
-              <MaterialIcons name='warning' size={20} color={theme.primary} />
+              <MaterialIcons name="warning" size={20} color={theme.primary} />
             </TouchableOpacity>
           )}
           <View style={styles.categoriesContainer}>
             {markingsData?.map((mark: any) => (
-              <TouchableOpacity key={mark.id} onPress={() => { openMarkingLabel(mark); }}>
+              <TouchableOpacity key={mark.id} onPress={() => openMarkingLabel(mark)}>
                 <Image
                   source={{
-                    uri:
-                      mark?.image_remote_url || getImageUrl(mark?.image) || '',
+                    uri: mark?.image_remote_url || getImageUrl(mark?.image) || '',
                   }}
-                  style={styles.categoryLogo}
-                // contentFit='cover'
-                // cachePolicy={'memory-disk'}
-                // transition={500}
+                  style={{ ...styles.categoryLogo, borderRadius: mark.hide_border ? 0 : 50, }}
                 />
               </TouchableOpacity>
             ))}
           </View>
+          <TouchableOpacity style={styles.priceTag} onPress={handlePriceChange}
+          >
+            <Text style={styles.priceText}>{showPrice(item, profile)}</Text>
+          </TouchableOpacity >
         </View>
+
         <View
           style={{
             ...styles.cardContent,
             gap: isWeb ? 15 : 5,
-            paddingHorizontal: isWeb ? 20 : 10,
+            height: '100%',
+            paddingHorizontal: isWeb ? screenWidth > 800 ? 20 : 10 : 10,
           }}
         >
           <Text style={{ ...styles.foodName, color: theme.card.text }}>
             {isWeb
-              ? excerpt(getTextFromTranslation(foodItem?.translations), 24)
+              ? excerpt(getTextFromTranslation(foodItem?.translations), 32)
               : excerpt(getTextFromTranslation(foodItem?.translations), 12)}
           </Text>
-          <TouchableOpacity
-            style={{ ...styles.priceButton }}
-            onPress={handlePriceChange}
-          >
-            <Text style={{ ...styles.price, color: 'black' }}>
-              {showPrice(item, profile)}
-            </Text>
-          </TouchableOpacity>
         </View>
       </TouchableOpacity>
       <PermissionModal isVisible={warning} setIsVisible={setWarning} />

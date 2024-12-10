@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTheme } from '@/hooks/useTheme';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
 import styles from './styles';
@@ -17,11 +17,13 @@ import { BarChart } from 'react-native-chart-kit';
 import { format, parseISO } from 'date-fns';
 import { UtilizationEntryHelper } from '@/redux/actions/UtilizationEntries/UtilizationEntries';
 import { useSelector } from 'react-redux';
+import { useFocusEffect } from 'expo-router';
 
 const ForecastSheet: React.FC<ForecastSheetProps> = ({ closeSheet }) => {
   const { theme } = useTheme();
   const utilizationEntryHelper = new UtilizationEntryHelper();
   const { selectedCanteen } = useSelector((state: any) => state.canteenReducer);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const [chartData, setChartData] = useState<any>({
     labels: [],
@@ -29,6 +31,11 @@ const ForecastSheet: React.FC<ForecastSheetProps> = ({ closeSheet }) => {
   });
 
   const processData = (data: any) => {
+    const utilizationGroup = data[0]?.utilization_group;
+    const max =
+      utilizationGroup?.threshold_until_max ||
+      utilizationGroup?.all_time_high ||
+      100;
     const intervals = [];
     for (let i = 0; i < 24; i++) {
       intervals.push(`${i}:00`, `${i}:15`, `${i}:30`, `${i}:45`);
@@ -39,12 +46,32 @@ const ForecastSheet: React.FC<ForecastSheetProps> = ({ closeSheet }) => {
         const start = format(parseISO(entry.date_start), 'H:mm');
         return start === label;
       });
-      return matchingData
-        ? matchingData.value_real ?? matchingData.value_forecast_current ?? 0
-        : 0;
+      let percentage = 0;
+      if (matchingData) {
+        if (matchingData.value_real) {
+          percentage = (matchingData.value_real / max) * 100;
+        } else if (matchingData.value_forecast_current) {
+          percentage = (matchingData.value_forecast_current / max) * 100;
+        } else {
+          percentage = 0;
+        }
+      } else {
+        percentage = 0;
+      }
+
+      return percentage.toFixed(1);
     });
 
-    return { labels: intervals, datasets: [{ data: chartData }] };
+    return {
+      labels: intervals,
+      datasets: [
+        {
+          data: chartData,
+          threshold_until_medium: 5,
+          threshold_until_high: 80,
+        },
+      ],
+    };
   };
 
   const getUtilization = async () => {
@@ -55,9 +82,10 @@ const ForecastSheet: React.FC<ForecastSheetProps> = ({ closeSheet }) => {
           selectedCanteen?.utilization_group,
           new Date().toISOString()
         );
-
-      const processedData = processData(utilizationData);
-      setChartData(processedData);
+      if (utilizationData) {
+        const processedData = processData(utilizationData);
+        setChartData(processedData);
+      }
     } catch (error) {
       console.error('Error fetching utilization data:', error);
     }
@@ -78,7 +106,25 @@ const ForecastSheet: React.FC<ForecastSheetProps> = ({ closeSheet }) => {
     strokeWidth: 2,
     barPercentage: 0.5,
     useShadowColorFromDataset: false,
+    decimalPlaces: 0,
+    formatYLabel: (value: any) => `${value}%`,
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      if (chartData && chartData?.datasets[0]?.data?.length) {
+        const firstNonZeroIndex = chartData.datasets[0].data.findIndex(
+          (value: number) => value > 0
+        );
+        if (firstNonZeroIndex !== -1) {
+          scrollViewRef.current?.scrollTo({
+            x: Math.max(0, firstNonZeroIndex * 50 - 100),
+            animated: true,
+          });
+        }
+      }
+    }, [chartData])
+  );
   return (
     <BottomSheetView
       style={{ ...styles.container, backgroundColor: theme.sheet.sheetBg }}
@@ -111,6 +157,7 @@ const ForecastSheet: React.FC<ForecastSheetProps> = ({ closeSheet }) => {
         </TouchableOpacity>
       </View>
       <ScrollView
+        ref={scrollViewRef}
         horizontal
         showsHorizontalScrollIndicator={true}
         style={styles.forecastContainer}
@@ -119,9 +166,9 @@ const ForecastSheet: React.FC<ForecastSheetProps> = ({ closeSheet }) => {
           paddingHorizontal: isWeb ? 20 : 10,
           width: chartData
             ? Math.max(
-              chartData.labels.length * 50,
-              Dimensions.get('window').width
-            )
+                chartData.labels.length * 50,
+                Dimensions.get('window').width
+              )
             : Dimensions.get('window').width,
           alignItems: 'center',
           marginTop: chartData ? 40 : 0,
@@ -136,8 +183,19 @@ const ForecastSheet: React.FC<ForecastSheetProps> = ({ closeSheet }) => {
               Dimensions.get('window').width
             )}
             height={400}
-            // yAxisLabel='$'
-            chartConfig={chartConfig}
+            showValuesOnTopOfBars
+            showBarTops
+            chartConfig={{
+              formatTopBarValue: (value) => {
+                if (value > 0) {
+                  return `${value}%`;
+                } else {
+                  return '';
+                }
+              },
+              ...chartConfig,
+              barPercentage: 1,
+            }}
             verticalLabelRotation={30}
           />
         ) : (

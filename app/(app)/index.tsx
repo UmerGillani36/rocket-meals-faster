@@ -1,4 +1,10 @@
-import { Dimensions, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Dimensions,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './styles';
@@ -19,7 +25,6 @@ import { Image } from 'expo-image';
 import { Buildings, Canteens } from '@/constants/types';
 import { BusinessHoursHelper } from '@/redux/actions/BusinessHours/BusinessHours';
 
-
 const Home = () => {
   const dispatch = useDispatch();
   const businessHoursHelper = new BusinessHoursHelper();
@@ -27,9 +32,13 @@ const Home = () => {
   const buildingsHelper = new BuildingsHelper();
   const router = useRouter();
   const { theme } = useTheme();
-  const { canteens, selectedCanteen } = useSelector((state: any) => state.canteenReducer);
+  const { canteens, selectedCanteen } = useSelector(
+    (state: any) => state.canteenReducer
+  );
 
-  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+  const [screenWidth, setScreenWidth] = useState(
+    Dimensions.get('window').width
+  );
 
   const checkCanteenSelection = () => {
     if (selectedCanteen) {
@@ -44,7 +53,9 @@ const Home = () => {
 
   const getCanteensWithBuildings = async () => {
     try {
-      const buildingsData = (await buildingsHelper.fetchBuildings({})) as Buildings[];
+      const buildingsData = (await buildingsHelper.fetchBuildings(
+        {}
+      )) as Buildings[];
       const buildings = buildingsData || [];
       const buildingsDict = buildings.reduce(
         (acc: Record<string, any>, building: any) => {
@@ -56,7 +67,9 @@ const Home = () => {
 
       dispatch({ type: SET_BUILDINGS, payload: buildings });
 
-      const canteensData = (await canteenHelper.fetchCanteens({})) as Canteens[];
+      const canteensData = (await canteenHelper.fetchCanteens(
+        {}
+      )) as Canteens[];
       const canteens = canteensData || [];
 
       const updatedCanteens = canteens.map((canteen: any) => {
@@ -98,7 +111,6 @@ const Home = () => {
     const subscription = Dimensions.addEventListener('change', handleResize);
 
     return () => subscription?.remove();
-
   }, []);
 
   const iscenter =

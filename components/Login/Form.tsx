@@ -157,23 +157,25 @@ const LoginForm: React.FC<FormProps> = ({
           </Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.section}>
-        <Checkbox
-          style={styles.checkbox}
-          value={isChecked}
-          onValueChange={setChecked}
-          color={isChecked ? '#000000' : undefined}
-        />
-        <Text
-          style={{
-            ...styles.checkboxLabel,
-            color: theme.login.text,
-            width: isWeb() ? '100%' : '90%',
-          }}
-        >
-          I agree to the General Terms and Conditions and declare that I have
-          taken note of the Privacy Policy.
-        </Text>
+      <View >
+        <TouchableOpacity onPress={() => setChecked(!isChecked)} style={styles.section}>
+          <Checkbox
+            style={styles.checkbox}
+            value={isChecked}
+            onValueChange={setChecked}
+            color={isChecked ? '#000000' : undefined}
+          />
+          <Text
+            style={{
+              ...styles.checkboxLabel,
+              color: theme.login.text,
+              width: isWeb() ? '100%' : '90%',
+            }}
+          >
+            I agree to the General Terms and Conditions and declare that I have
+            taken note of the Privacy Policy.
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
